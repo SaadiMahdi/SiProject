@@ -5,7 +5,10 @@ const bcSchema = new mongoose.Schema({
     listProduits:[
         {
             id: { type: ObjectId, ref: "Product" },
-            quantite: Number,
+            quantite:  {
+                type: Number,
+                required: true
+            },
         }
     ],
     fournisseur: {

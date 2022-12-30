@@ -5,10 +5,23 @@ const factureSchema = new mongoose.Schema({
     date: Date,
     listProduits:[
         {
-            id: { type: ObjectId, ref: "Produit" },
-            quantite: Number,
-            prixHT: Number,
-            prixVente: Number
+            id: { 
+                type: ObjectId, 
+                ref: "Produit" 
+            },
+            quantite:  {
+                type: Number,
+                required: true
+            },
+            prixHT:  {
+                type: Number,
+                required: true
+            },
+            prixVente:  {
+                type: Number,
+                required: true
+            },
+            required: true
         }
     ],
     fournisseur: {

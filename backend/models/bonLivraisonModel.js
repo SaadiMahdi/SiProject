@@ -6,9 +6,18 @@ const blSchema = new mongoose.Schema({
     listProduits:[
         {
             id: { type: ObjectId, ref: "Produit" },
-            quantite: Number,
-            prixHT: Number,
-            prixVente: Number
+            quantite:  {
+                type: Number,
+                required: true
+            },
+            prixHT:  {
+                type: Number,
+                required: true
+            },
+            prixVente:  {
+                type: Number,
+                required: true
+            },
         }
     ],
     fournisseur: {
