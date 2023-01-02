@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
+
 
 const produitSchema = new mongoose.Schema({
     designation: {
@@ -6,8 +8,8 @@ const produitSchema = new mongoose.Schema({
         required: true,
         trim: true
      },
-    type:{
-        type: objectId,
+    categorie:{
+        type: ObjectId,
         required: true,
         ref: 'Type'
     },

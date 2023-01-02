@@ -1,16 +1,16 @@
-const Produit = require('./../models/ProduitModel');
+const Fournisseur = require('./../models/fournisseurModel');
 
 
 
-exports.getAllProduits = async (req, res) => {
+exports.getAllFournisseurs = async (req, res) => {
   try {
-    const produit = await Produit.find().populate('categorie', '_id designation')
+    const fournisseurs = await Fournisseur.find()
 
     res.status(200).json({
       status: 'success',
-      results: produit.length,
+      results: fournisseurs.length,
       data: {
-        produit
+        fournisseurs
       }
     });
   } catch (err) {
@@ -21,14 +21,14 @@ exports.getAllProduits = async (req, res) => {
   }
 };
 
-exports.getProduit = async (req, res) => {
+exports.getFournisseur = async (req, res) => {
   try {
-    const produit = await Produit.findById(req.params.id);
+    const fournisseur = await Fournisseur.findById(req.params.id);
 
     res.status(200).json({
       status: 'success',
       data: {
-        produit
+        fournisseur
       }
     });
   } catch (err) {
@@ -39,15 +39,15 @@ exports.getProduit = async (req, res) => {
   }
 };
 
-exports.createProduit = async (req, res) => {
+exports.createFournisseur = async (req, res) => {
   try {
 
-    const newProduit = await Produit.create(req.body);
+    const newFournisseur = await Fournisseur.create(req.body);
 
     res.status(201).json({
       status: 'success',
       data: {
-        produit: newProduit
+        fournisseur: newFournisseur
       }
     });
   } catch (err) {
@@ -58,9 +58,9 @@ exports.createProduit = async (req, res) => {
   }
 };
 
-exports.updateProduit = async (req, res) => {
+exports.updateFournisseur = async (req, res) => {
   try {
-    const produit = await Produit.findByIdAndUpdate(req.params.id, req.body, {
+    const fournisseur = await Fournisseur.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
     });
@@ -68,7 +68,7 @@ exports.updateProduit = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        produit
+        fournisseur
       }
     });
   } catch (err) {
@@ -79,9 +79,9 @@ exports.updateProduit = async (req, res) => {
   }
 };
 
-exports.deleteProduit = async (req, res) => {
+exports.deleteFournisseur = async (req, res) => {
   try {
-    await Produit.findByIdAndDelete(req.params.id);
+    await Fournisseur.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',
@@ -94,5 +94,4 @@ exports.deleteProduit = async (req, res) => {
     });
   }
 };
-
 

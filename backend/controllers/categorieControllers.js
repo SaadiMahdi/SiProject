@@ -1,16 +1,16 @@
-const Produit = require('./../models/ProduitModel');
+const Categorie = require('./../models/categorieModel');
 
 
 
-exports.getAllProduits = async (req, res) => {
+exports.getAllCategories = async (req, res) => {
   try {
-    const produit = await Produit.find().populate('categorie', '_id designation')
+    const categorie = await Categorie.find()
 
     res.status(200).json({
       status: 'success',
-      results: produit.length,
+      results: categorie.length,
       data: {
-        produit
+        categorie
       }
     });
   } catch (err) {
@@ -21,14 +21,14 @@ exports.getAllProduits = async (req, res) => {
   }
 };
 
-exports.getProduit = async (req, res) => {
+exports.getCategorie = async (req, res) => {
   try {
-    const produit = await Produit.findById(req.params.id);
+    const categorie = await Categorie.findById(req.params.id);
 
     res.status(200).json({
       status: 'success',
       data: {
-        produit
+        categorie
       }
     });
   } catch (err) {
@@ -39,15 +39,15 @@ exports.getProduit = async (req, res) => {
   }
 };
 
-exports.createProduit = async (req, res) => {
+exports.createCategorie = async (req, res) => {
   try {
 
-    const newProduit = await Produit.create(req.body);
+    const newCategorie = await Categorie.create(req.body);
 
     res.status(201).json({
       status: 'success',
       data: {
-        produit: newProduit
+        categorie: newCategorie
       }
     });
   } catch (err) {
@@ -58,9 +58,9 @@ exports.createProduit = async (req, res) => {
   }
 };
 
-exports.updateProduit = async (req, res) => {
+exports.updateCategorie = async (req, res) => {
   try {
-    const produit = await Produit.findByIdAndUpdate(req.params.id, req.body, {
+    const categorie = await Categorie.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
     });
@@ -68,7 +68,7 @@ exports.updateProduit = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        produit
+        categorie
       }
     });
   } catch (err) {
@@ -79,9 +79,9 @@ exports.updateProduit = async (req, res) => {
   }
 };
 
-exports.deleteProduit = async (req, res) => {
+exports.deleteCategorie = async (req, res) => {
   try {
-    await Produit.findByIdAndDelete(req.params.id);
+    await Categorie.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',
@@ -94,5 +94,4 @@ exports.deleteProduit = async (req, res) => {
     });
   }
 };
-
 

@@ -13,7 +13,7 @@ const fournisseurSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
-    addrese:{
+    addresse:{
         type: String,
         required: [true,'please anter your address'],
         trim: true,

@@ -1,16 +1,16 @@
-const Produit = require('./../models/ProduitModel');
+const Client = require('./../models/clientModel');
 
 
 
-exports.getAllProduits = async (req, res) => {
+exports.getAllClients = async (req, res) => {
   try {
-    const produit = await Produit.find().populate('categorie', '_id designation')
+    const client = await Client.find()
 
     res.status(200).json({
       status: 'success',
-      results: produit.length,
+      results: client.length,
       data: {
-        produit
+        client
       }
     });
   } catch (err) {
@@ -21,14 +21,14 @@ exports.getAllProduits = async (req, res) => {
   }
 };
 
-exports.getProduit = async (req, res) => {
+exports.getClient = async (req, res) => {
   try {
-    const produit = await Produit.findById(req.params.id);
+    const client = await Client.findById(req.params.id);
 
     res.status(200).json({
       status: 'success',
       data: {
-        produit
+        client
       }
     });
   } catch (err) {
@@ -39,15 +39,15 @@ exports.getProduit = async (req, res) => {
   }
 };
 
-exports.createProduit = async (req, res) => {
+exports.createClient = async (req, res) => {
   try {
 
-    const newProduit = await Produit.create(req.body);
+    const newClient = await Client.create(req.body);
 
     res.status(201).json({
       status: 'success',
       data: {
-        produit: newProduit
+        client: newClient
       }
     });
   } catch (err) {
@@ -58,9 +58,9 @@ exports.createProduit = async (req, res) => {
   }
 };
 
-exports.updateProduit = async (req, res) => {
+exports.updateClient = async (req, res) => {
   try {
-    const produit = await Produit.findByIdAndUpdate(req.params.id, req.body, {
+    const client = await Client.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
     });
@@ -68,7 +68,7 @@ exports.updateProduit = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        produit
+        client
       }
     });
   } catch (err) {
@@ -79,9 +79,9 @@ exports.updateProduit = async (req, res) => {
   }
 };
 
-exports.deleteProduit = async (req, res) => {
+exports.deleteClient = async (req, res) => {
   try {
-    await Produit.findByIdAndDelete(req.params.id);
+    await Client.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',
@@ -94,5 +94,4 @@ exports.deleteProduit = async (req, res) => {
     });
   }
 };
-
 
