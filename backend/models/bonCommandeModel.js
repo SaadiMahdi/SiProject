@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema.Types;
 
 const bcSchema = new mongoose.Schema({
-  listProduits: [
+  listeProduits: [
     {
       id: { type: ObjectId, ref: "Produit" },
       quantite: {

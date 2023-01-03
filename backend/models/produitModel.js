@@ -13,10 +13,6 @@ const produitSchema = new mongoose.Schema({
         required: true,
         ref: 'Categorie'
     },
-    prixUnitaire:{
-        type: Number,
-        required: [true,'please anter the price'],
-    }
 })
 
 const Produit = mongoose.model('Produit', produitSchema);

@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 
 
 const factureSchema = new mongoose.Schema({
     date: Date,
-    listProduits:[
+    listeProduits:[
         {
-            id: { 
+            produit: { 
                 type: ObjectId, 
                 ref: "Produit" 
             },
@@ -21,7 +22,6 @@ const factureSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            required: true
         }
     ],
     fournisseur: {
@@ -34,7 +34,8 @@ const factureSchema = new mongoose.Schema({
         enum:[
             'réglé',
             'non réglé'
-        ]
+        ],
+        required: true
     }
 })
 
