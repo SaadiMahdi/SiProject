@@ -4,6 +4,7 @@ const fournisseurRouter = require('./routes/fournisseurRoutes');
 const clientRouter = require('./routes/clientRoutes');
 const categorieRouter = require('./routes/categorieRoutes');
 const produitRouter = require('./routes/produitRoutes');
+const bonCommandeRouter = require('./routes/bonCommandeRoutes');
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/v1/fournisseur', fournisseurRouter);
 app.use('/api/v1/client', clientRouter);
 app.use('/api/v1/categorie', categorieRouter);
 app.use('/api/v1/produit', produitRouter);
+app.use('/api/v1/bonCommande', bonCommandeRouter);
 
 
 module.exports = app;
