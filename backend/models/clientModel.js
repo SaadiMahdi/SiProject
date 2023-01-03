@@ -13,7 +13,7 @@ const clientSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
-    addrese:{
+    address:{
         type: String,
         required: [true,'please anter your address'],
         trim: true,

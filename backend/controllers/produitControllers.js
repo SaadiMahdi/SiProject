@@ -4,13 +4,13 @@ const Produit = require('./../models/ProduitModel');
 
 exports.getAllProduits = async (req, res) => {
   try {
-    const produit = await Produit.find().populate('categorie', '_id designation')
+    const produits = await Produit.find({}).populate("categorie");
 
     res.status(200).json({
       status: 'success',
-      results: produit.length,
+      results: produits.length,
       data: {
-        produit
+        produits
       }
     });
   } catch (err) {
@@ -23,7 +23,7 @@ exports.getAllProduits = async (req, res) => {
 
 exports.getProduit = async (req, res) => {
   try {
-    const produit = await Produit.findById(req.params.id);
+    const produit = await Produit.findById(req.params.id).populate('categorie');
 
     res.status(200).json({
       status: 'success',

@@ -11,7 +11,7 @@ const produitSchema = new mongoose.Schema({
     categorie:{
         type: ObjectId,
         required: true,
-        ref: 'Type'
+        ref: 'Categorie'
     },
     prixUnitaire:{
         type: Number,
