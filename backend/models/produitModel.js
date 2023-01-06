@@ -12,7 +12,7 @@ const produitSchema = new mongoose.Schema({
         type: ObjectId,
         required: true,
         ref: 'Categorie'
-    },
+    }
 })
 
 const Produit = mongoose.model('Produit', produitSchema);

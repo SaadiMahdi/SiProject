@@ -1,17 +1,15 @@
-const Facture = require("./../models/factureModel");
+const Paiement = require("./../models/paiementModel");
 
-exports.getAllFactures = async (req, res) => {
+exports.getAllPaiement = async (req, res) => {
   try {
-    const factures = await Facture
+    const paiements = await Paiement
       .find({})
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.produit", "_id designation");
-
+      .populate("facture", "_id ")
     res.status(200).json({
       status: "success",
-      results: factures.length,
+      results: paiements.length,
       data: {
-        factures,
+        paiements,
       },
     });
   } catch (err) {
@@ -22,17 +20,16 @@ exports.getAllFactures = async (req, res) => {
   }
 };
 
-exports.getFacture = async (req, res) => {
+exports.getPaiement = async (req, res) => {
   try {
-    const facture = await Facture
+    const paiement = await Paiement
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
-      // .populate("listProduits.produit", "_id designation");
+      .populate("facture", "_id ")
 
     res.status(200).json({
       status: "success",
       data: {
-        facture,
+        paiement,
       },
     });
   } catch (err) {
@@ -43,14 +40,14 @@ exports.getFacture = async (req, res) => {
   }
 };
 
-exports.createFacture = async (req, res) => {
+exports.createPaiement = async (req, res) => {
   try {
-    const newFacture = await Facture.create(req.body);
+    const newPaiement = await Paiement.create(req.body);
 
     res.status(201).json({
       status: "success",
       data: {
-        bon: newFacture,
+        bon: newPaiement,
       },
     });
   } catch (err) {
@@ -61,9 +58,9 @@ exports.createFacture = async (req, res) => {
   }
 };
 
-exports.updateFacture = async (req, res) => {
+exports.updatePaiement = async (req, res) => {
   try {
-    const facture = await Facture.findByIdAndUpdate(req.params.id, req.body, {
+    const paiement = await Paiement.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -71,7 +68,7 @@ exports.updateFacture = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        facture,
+        paiement,
       },
     });
   } catch (err) {
@@ -82,9 +79,9 @@ exports.updateFacture = async (req, res) => {
   }
 };
 
-exports.deleteFacture = async (req, res) => {
+exports.deletePaiement = async (req, res) => {
   try {
-    await Facture.findByIdAndDelete(req.params.id);
+    await Paiement.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: "success",

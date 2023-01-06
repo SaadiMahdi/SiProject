@@ -1,17 +1,17 @@
-const Facture = require("./../models/factureModel");
+const transaction = require("./../models/transactionModel");
 
-exports.getAllFactures = async (req, res) => {
+exports.getAllTransactions = async (req, res) => {
   try {
-    const factures = await Facture
+    const tr = await transaction
       .find({})
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.produit", "_id designation");
+      .populate("client", "_id")
+      .populate("listeProduits.id", "_id");
 
     res.status(200).json({
       status: "success",
-      results: factures.length,
+      results: tr.length,
       data: {
-        factures,
+        tr,
       },
     });
   } catch (err) {
@@ -22,17 +22,17 @@ exports.getAllFactures = async (req, res) => {
   }
 };
 
-exports.getFacture = async (req, res) => {
+exports.getTransaction = async (req, res) => {
   try {
-    const facture = await Facture
+    const tr = await transaction
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
-      // .populate("listProduits.produit", "_id designation");
+      .populate("client", "_id")
+      .populate("listeProduits.id", "_id");
 
     res.status(200).json({
       status: "success",
       data: {
-        facture,
+        tr,
       },
     });
   } catch (err) {
@@ -43,14 +43,14 @@ exports.getFacture = async (req, res) => {
   }
 };
 
-exports.createFacture = async (req, res) => {
+exports.createTransaction = async (req, res) => {
   try {
-    const newFacture = await Facture.create(req.body);
+    const newTransaction = await transaction.create(req.body);
 
     res.status(201).json({
       status: "success",
       data: {
-        bon: newFacture,
+        tr: newTransaction,
       },
     });
   } catch (err) {
@@ -61,9 +61,9 @@ exports.createFacture = async (req, res) => {
   }
 };
 
-exports.updateFacture = async (req, res) => {
+exports.updateTransaction = async (req, res) => {
   try {
-    const facture = await Facture.findByIdAndUpdate(req.params.id, req.body, {
+    const tr = await transaction.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -71,7 +71,7 @@ exports.updateFacture = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        facture,
+        tr,
       },
     });
   } catch (err) {
@@ -82,9 +82,9 @@ exports.updateFacture = async (req, res) => {
   }
 };
 
-exports.deleteFacture = async (req, res) => {
+exports.deleteTransaction = async (req, res) => {
   try {
-    await Facture.findByIdAndDelete(req.params.id);
+    await transaction.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: "success",
