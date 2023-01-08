@@ -1,11 +1,13 @@
-const Produit = require('./../models/ProduitModel');
+const ProduitEnStock = require('./../models/ProduitEnStockModel');
 
 
 
-exports.getAllProduits = async (req, res) => {
+exports.getAllProduitsEnStock = async (req, res) => {
   try {
-    const produits = await Produit.find({})
-    .populate("categorie")
+    const produits = await ProduitEnStock.find({})
+    .populate("produit", "id")
+    .populate("facture", "_id")
+    .populate("bonDeCommande", "_id")
 
     res.status(200).json({
       status: 'success',
@@ -22,10 +24,12 @@ exports.getAllProduits = async (req, res) => {
   }
 };
 
-exports.getProduit = async (req, res) => {
+exports.getProduitEnStock = async (req, res) => {
   try {
-    const produit = await Produit.findById(req.params.id)
-    .populate('categorie')
+    const produit = await ProduitEnStock.findById(req.params.id)
+    .populate("produit", "id")
+    .populate("facture", "_id")
+    .populate("bonDeCommande", "_id")
 
     res.status(200).json({
       status: 'success',
@@ -41,10 +45,10 @@ exports.getProduit = async (req, res) => {
   }
 };
 
-exports.createProduit = async (req, res) => {
+exports.createProduitEnStock = async (req, res) => {
   try {
 
-    const newProduit = await Produit.create(req.body);
+    const newProduit = await ProduitEnStock.create(req.body);
 
     res.status(201).json({
       status: 'success',
@@ -60,9 +64,9 @@ exports.createProduit = async (req, res) => {
   }
 };
 
-exports.updateProduit = async (req, res) => {
+exports.updateProduitEnStock = async (req, res) => {
   try {
-    const produit = await Produit.findByIdAndUpdate(req.params.id, req.body, {
+    const produit = await ProduitEnStock.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
     });
@@ -81,7 +85,7 @@ exports.updateProduit = async (req, res) => {
   }
 };
 
-exports.deleteProduit = async (req, res) => {
+exports.deleteProduitEnStock = async (req, res) => {
   try {
     await Produit.findByIdAndDelete(req.params.id);
 
@@ -96,5 +100,3 @@ exports.deleteProduit = async (req, res) => {
     });
   }
 };
-
-

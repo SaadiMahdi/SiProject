@@ -1,17 +1,15 @@
-const bonDeCommande = require("./../models/bonCommandeModel");
+const Reglement = require("./../models/reglementModel");
 
-exports.getAllBons = async (req, res) => {
+exports.getAllReglement = async (req, res) => {
   try {
-    const bons = await bonDeCommande
+    const reglements = await Reglement
       .find({})
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.id", "_id designation");
-
+      .populate("facture", "_id ")
     res.status(200).json({
       status: "success",
-      results: bons.length,
+      results: reglements.length,
       data: {
-        bons,
+        reglements,
       },
     });
   } catch (err) {
@@ -22,17 +20,16 @@ exports.getAllBons = async (req, res) => {
   }
 };
 
-exports.getBon = async (req, res) => {
+exports.getReglement = async (req, res) => {
   try {
-    const bon = await bonDeCommande
+    const reglement = await Reglement
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.id", "_id designation");
+      .populate("facture", "_id ")
 
     res.status(200).json({
       status: "success",
       data: {
-        bon,
+        reglement,
       },
     });
   } catch (err) {
@@ -43,14 +40,14 @@ exports.getBon = async (req, res) => {
   }
 };
 
-exports.createBon = async (req, res) => {
+exports.createReglement = async (req, res) => {
   try {
-    const newBon = await bonDeCommande.create(req.body);
+    const newReglement = await Reglement.create(req.body);
 
     res.status(201).json({
       status: "success",
       data: {
-        bon: newBon,
+        bon: newReglement,
       },
     });
   } catch (err) {
@@ -61,9 +58,9 @@ exports.createBon = async (req, res) => {
   }
 };
 
-exports.updateBon = async (req, res) => {
+exports.updateReglement = async (req, res) => {
   try {
-    const bon = await bonDeCommande.findByIdAndUpdate(req.params.id, req.body, {
+    const reglement = await Reglement.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -71,7 +68,7 @@ exports.updateBon = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        bon,
+        reglement,
       },
     });
   } catch (err) {
@@ -82,9 +79,9 @@ exports.updateBon = async (req, res) => {
   }
 };
 
-exports.deleteBon = async (req, res) => {
+exports.deleteReglement = async (req, res) => {
   try {
-    await bonDeCommande.findByIdAndDelete(req.params.id);
+    await Facture.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: "success",

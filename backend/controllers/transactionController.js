@@ -1,17 +1,17 @@
-const bonDeCommande = require("./../models/bonCommandeModel");
+const transaction = require("./../models/transactionModel");
 
-exports.getAllBons = async (req, res) => {
+exports.getAllTransactions = async (req, res) => {
   try {
-    const bons = await bonDeCommande
+    const tr = await transaction
       .find({})
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.id", "_id designation");
+      .populate("client", "_id")
+      .populate("listeProduits.id", "_id");
 
     res.status(200).json({
       status: "success",
-      results: bons.length,
+      results: tr.length,
       data: {
-        bons,
+        tr,
       },
     });
   } catch (err) {
@@ -22,17 +22,17 @@ exports.getAllBons = async (req, res) => {
   }
 };
 
-exports.getBon = async (req, res) => {
+exports.getTransaction = async (req, res) => {
   try {
-    const bon = await bonDeCommande
+    const tr = await transaction
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.id", "_id designation");
+      .populate("client", "_id")
+      .populate("listeProduits.id", "_id");
 
     res.status(200).json({
       status: "success",
       data: {
-        bon,
+        tr,
       },
     });
   } catch (err) {
@@ -43,14 +43,14 @@ exports.getBon = async (req, res) => {
   }
 };
 
-exports.createBon = async (req, res) => {
+exports.createTransaction = async (req, res) => {
   try {
-    const newBon = await bonDeCommande.create(req.body);
+    const newTransaction = await transaction.create(req.body);
 
     res.status(201).json({
       status: "success",
       data: {
-        bon: newBon,
+        tr: newTransaction,
       },
     });
   } catch (err) {
@@ -61,9 +61,9 @@ exports.createBon = async (req, res) => {
   }
 };
 
-exports.updateBon = async (req, res) => {
+exports.updateTransaction = async (req, res) => {
   try {
-    const bon = await bonDeCommande.findByIdAndUpdate(req.params.id, req.body, {
+    const tr = await transaction.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -71,7 +71,7 @@ exports.updateBon = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        bon,
+        tr,
       },
     });
   } catch (err) {
@@ -82,9 +82,9 @@ exports.updateBon = async (req, res) => {
   }
 };
 
-exports.deleteBon = async (req, res) => {
+exports.deleteTransaction = async (req, res) => {
   try {
-    await bonDeCommande.findByIdAndDelete(req.params.id);
+    await transaction.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: "success",

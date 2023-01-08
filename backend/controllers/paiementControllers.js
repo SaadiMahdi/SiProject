@@ -1,17 +1,15 @@
-const bonDeCommande = require("./../models/bonCommandeModel");
+const Paiement = require("./../models/paiementModel");
 
-exports.getAllBons = async (req, res) => {
+exports.getAllPaiement = async (req, res) => {
   try {
-    const bons = await bonDeCommande
+    const paiements = await Paiement
       .find({})
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.id", "_id designation");
-
+      .populate("facture", "_id ")
     res.status(200).json({
       status: "success",
-      results: bons.length,
+      results: paiements.length,
       data: {
-        bons,
+        paiements,
       },
     });
   } catch (err) {
@@ -22,17 +20,16 @@ exports.getAllBons = async (req, res) => {
   }
 };
 
-exports.getBon = async (req, res) => {
+exports.getPaiement = async (req, res) => {
   try {
-    const bon = await bonDeCommande
+    const paiement = await Paiement
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
-      // .populate("listeProduits.id", "_id designation");
+      .populate("facture", "_id ")
 
     res.status(200).json({
       status: "success",
       data: {
-        bon,
+        paiement,
       },
     });
   } catch (err) {
@@ -43,14 +40,14 @@ exports.getBon = async (req, res) => {
   }
 };
 
-exports.createBon = async (req, res) => {
+exports.createPaiement = async (req, res) => {
   try {
-    const newBon = await bonDeCommande.create(req.body);
+    const newPaiement = await Paiement.create(req.body);
 
     res.status(201).json({
       status: "success",
       data: {
-        bon: newBon,
+        bon: newPaiement,
       },
     });
   } catch (err) {
@@ -61,9 +58,9 @@ exports.createBon = async (req, res) => {
   }
 };
 
-exports.updateBon = async (req, res) => {
+exports.updatePaiement = async (req, res) => {
   try {
-    const bon = await bonDeCommande.findByIdAndUpdate(req.params.id, req.body, {
+    const paiement = await Paiement.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -71,7 +68,7 @@ exports.updateBon = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: {
-        bon,
+        paiement,
       },
     });
   } catch (err) {
@@ -82,9 +79,9 @@ exports.updateBon = async (req, res) => {
   }
 };
 
-exports.deleteBon = async (req, res) => {
+exports.deletePaiement = async (req, res) => {
   try {
-    await bonDeCommande.findByIdAndDelete(req.params.id);
+    await Paiement.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: "success",
