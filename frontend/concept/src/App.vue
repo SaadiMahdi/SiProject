@@ -1,15 +1,12 @@
 <template>
   <v-app>
-    <v-main class=" background">
-      <router-view/>
-    </v-main>
+    <router-view class="background"/>
   </v-app>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
+  name: "App",
 
   data: () => ({
     //
@@ -19,10 +16,14 @@ export default {
 
 
 <style scoped>
-.v-application{
-  font-family:  'Poppins', sans-serif;
+.v-application {
+  font-family: "Poppins", sans-serif;
 }
-.v-main{
+.v-main {
   align-items: center;
+}
+
+.v-main__wrap {
+  height: 100% !important;
 }
 </style>
