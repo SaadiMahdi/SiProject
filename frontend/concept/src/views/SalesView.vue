@@ -4,13 +4,13 @@
       <AppSlideBar />
     </div>
     <div class="main-content">
-      <AppNavBar title="Tables"/>
+      <AppNavBar title="Sales"/>
       <div class="grid-page">
         <div>
           <v-card height="100">
-            <h2>Tables</h2>
+            <h2>Sales</h2>
           </v-card>
-          <v-card>
+          <v-card>   
             <h2>Test2</h2>
           </v-card>
         </div>
@@ -46,7 +46,7 @@ export default {
   grid-template-rows: 1fr 1fr;
   grid-gap: 10px;
 }
-.main-content{
+.main-content {
   width: 100%;
   height: 100%;
 }

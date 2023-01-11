@@ -1,6 +1,6 @@
 <template>
-<!-- I added only two links for now -->
-  <v-navigation-drawer permanent expand-on-hover class="rounded-lg" >
+  <!-- I added only two links for now -->
+  <v-navigation-drawer permanent expand-on-hover class="rounded-lg">
     <v-list>
       <v-list-item class="px-2">
         <v-list-item-avatar>
@@ -31,17 +31,23 @@
         </v-list-item-icon>
         <v-list-item-title>Tables</v-list-item-title>
       </v-list-item>
-      <v-list-item link>
+      <v-list-item to="orders" active-class=" primary">
         <v-list-item-icon>
           <v-icon>mdi-account-multiple</v-icon>
         </v-list-item-icon>
-        <v-list-item-title>Shared with me</v-list-item-title>
+        <v-list-item-title>Orders & Bills</v-list-item-title>
       </v-list-item>
-      <v-list-item link>
+      <v-list-item to="inventory" active-class=" primary">
         <v-list-item-icon>
           <v-icon>mdi-star</v-icon>
         </v-list-item-icon>
-        <v-list-item-title>Starred</v-list-item-title>
+        <v-list-item-title>Inventory</v-list-item-title>
+      </v-list-item>
+      <v-list-item to="sales" active-class=" primary">
+        <v-list-item-icon>
+          <v-icon>mdi-star</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Sales</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>

@@ -4,11 +4,11 @@
       <AppSlideBar />
     </div>
     <div class="main-content">
-      <AppNavBar title="Tables"/>
+      <AppNavBar title="Orders & Bills"/>
       <div class="grid-page">
         <div>
           <v-card height="100">
-            <h2>Tables</h2>
+            <h2>Orders</h2>
           </v-card>
           <v-card>
             <h2>Test2</h2>
