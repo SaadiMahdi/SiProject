@@ -5,11 +5,9 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 // import { library } from '@fortawesome/fontawesome-svg-core'
 // import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
+// import { faUsers } from '@fortawesome/free-solid-svg-icons'
 // import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-
-// library.add(faUserSecret)
-
+// library.add(faUsers, faUserSecret)
 // Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
