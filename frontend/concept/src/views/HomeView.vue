@@ -6,10 +6,10 @@
     <div class="main-content">
       <AppNavBar title="Dashboard" />
       <div class="grid-page">
-        <v-card height="120" class="fifty-grid1">
+        <v-card  class="fifty-grid1">
           <InfoCard :icon="salesIcon" :elements="salesInfo"></InfoCard>
         </v-card>
-        <v-card height="120" class="fifty-grid2">
+        <v-card  class="fifty-grid2">
           <InfoCard :icon="costumerIcon" :elements="costumersInfo"></InfoCard>
         </v-card>
         <v-card class="stats1">
