@@ -6,23 +6,23 @@
     <div class="main-content">
       <AppNavBar title="Dashboard" />
       <div class="grid-page">
-        <v-card height="100" class="fifty-grid1">
-          <h2>info card1</h2>
+        <v-card height="120" class="fifty-grid1">
+          <InfoCard :icon="salesIcon" :elements="salesInfo"></InfoCard>
         </v-card>
-        <v-card class="fifty-grid2">
-          <h2>infocard 2</h2>
+        <v-card height="120" class="fifty-grid2">
+          <InfoCard :icon="costumerIcon" :elements="costumersInfo"></InfoCard>
         </v-card>
         <v-card class="stats1">
           <h2>Stats</h2>
         </v-card>
         <v-card class="endcard">
-          <h2>inforcard</h2>
+          <InfoCard :icon="baughtIcon" :elements="boughtInfo"></InfoCard>
         </v-card>
         <v-card class="stats2">
-          <h2>infocard</h2>
+          <h2>Stats</h2>
         </v-card>
         <v-card class="endcard">
-          <h2>Stats</h2>
+          <InfoCard :icon="vendorIcon" :elements="vendorsInfo"></InfoCard>
         </v-card>
       </div>
     </div>
@@ -32,11 +32,62 @@
 <script>
 import AppSlideBar from "../components/AppSlideBar";
 import AppNavBar from "../components/AppNavBar";
+import InfoCard from "../components/InfoCard.vue";
 
 export default {
   components: {
     AppSlideBar,
     AppNavBar,
+    InfoCard,
+  },
+  data() {
+    return {
+      salesInfo: [
+        {
+          title: "Solde Products",
+          inf: "1.000.000",
+        },
+        {
+          title: "Best Selling",
+          inf: "1.000.000",
+        },
+        
+      ],
+      salesIcon: "mdi-shopping-outline",
+      costumersInfo: [
+        {
+          title: " Costumers",
+          inf: "1",
+        },
+        {
+          title: "Best Costumers",
+          inf: "1",
+        },
+      ],
+      costumerIcon: "mdi-account-outline",
+      boughtInfo: [
+        {
+          title: "Bought Products",
+          inf: "1.000.000",
+        },
+        {
+          title: "Best Selling",
+          inf: "1.000.000",
+        },
+      ],
+      baughtIcon: "mdi-chart-donut",
+      vendorsInfo: [
+        {
+          title: "Vendors",
+          inf: "1.000.000",
+        },
+        {
+          title: "Best Selling",
+          inf: "1.000.000",
+        },
+      ],
+      vendorIcon: "mdi-account-outline",
+    }
   },
 };
 </script>
@@ -55,6 +106,7 @@ export default {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 10px;
+  margin: 10px;
 }
 .fifty-grid1 {
   grid-column: 1 / 4;
