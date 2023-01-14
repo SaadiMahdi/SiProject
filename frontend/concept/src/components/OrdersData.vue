@@ -6,7 +6,8 @@
         <div class="header">
           <ul>
             <li>
-              <v-text-field height="30px" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+              <v-text-field height="30px" append-icon="mdi-magnify" label="Search" single-line
+                hide-details></v-text-field>
             </li>
             <li>
               <v-btn width="80px" outlined>
@@ -264,11 +265,11 @@ export default {
   display: flex;
   flex-direction: row;
 }
-ul{
+
+ul {
   list-style: none;
   display: flex;
   flex-direction: row;
   gap: 1rem;
 }
-
 </style>

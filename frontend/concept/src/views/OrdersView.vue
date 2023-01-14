@@ -28,9 +28,9 @@
         <v-card class="info2">
           <InfoCard :icon="cartIcon" :elements="cartInfo"></InfoCard>
         </v-card>
-        <v-card class="stats">
-          <OrdersData v-if="Orders"/>
-        </v-card>
+        <div class="stats">
+          <OrdersData v-if="orders"/>
+        </div>
       </div>
     </div>
   </div>
