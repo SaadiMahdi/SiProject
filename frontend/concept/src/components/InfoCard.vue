@@ -43,7 +43,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
 }
 
 .row1 {
@@ -51,6 +50,11 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   margin: 0 0 1.5em 0;
+}
+.row1 div:nth-child(2){
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 select {

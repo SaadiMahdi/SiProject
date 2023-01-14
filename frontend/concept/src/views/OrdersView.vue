@@ -8,13 +8,13 @@
       <div class="header">
         <ul>
           <li>
-            <v-btn color="primary" plain>Purchase order</v-btn>
+            <v-btn :class="{active: orders}" @click="getOrders"  plain >Purchase Order</v-btn>
           </li>
           <li>
-            <v-btn color="secondary" plain>Bills</v-btn>
+            <v-btn :class="{active: bills}" @click="getBills" plain >Bills</v-btn>
           </li>
           <li>
-            <v-btn color="secondary" plain>Settelments</v-btn>
+            <v-btn :class="{active: settlements}" @click="getSettlements" plain >Settlements</v-btn>
           </li>
           <li>
             <v-btn color="primary" depressed>+ Add new Order</v-btn>
@@ -29,7 +29,7 @@
           <InfoCard :icon="cartIcon" :elements="cartInfo"></InfoCard>
         </v-card>
         <v-card class="stats">
-          <h2>Test3</h2>
+          <OrdersData v-if="Orders"/>
         </v-card>
       </div>
     </div>
@@ -40,11 +40,14 @@
 import AppSlideBar from "../components/AppSlideBar";
 import AppNavBar from "../components/AppNavBar";
 import InfoCard from "../components/InfoCard.vue";
+import OrdersData from "../components/OrdersData.vue";
+
 export default {
   components: {
     AppSlideBar,
     AppNavBar,
     InfoCard,
+    OrdersData,
   },
   data() {
     return {
@@ -74,7 +77,35 @@ export default {
         },
       ],
       cartIcon: "mdi-cart",
+      orders : true,
+      bills: false,
+      settlements: false,
     }
+  },
+  methods: {
+    initialize(){
+      this.Orders = true;
+      this.Bills = false;
+      this.Settlements = false;
+    },
+    getOrders(){
+      this.orders = true;
+      this.bills = false;
+      this.settlements = false;
+    },
+    getBills(){
+      this.orders = false;
+      this.bills = true;
+      this.settlements = false;
+    },
+    getSettlements(){
+      this.orders = false;
+      this.bills = false;
+      this.settlements = true;
+    }
+  },
+  created() {
+    this.initialize();
   },
 };
 </script>
@@ -126,5 +157,8 @@ ul {
 .stats {
   grid-column: 1 / 4;
   grid-row: 2 / 6;
+}
+.active{
+  color: red;
 }
 </style>
