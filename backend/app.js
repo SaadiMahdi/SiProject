@@ -10,6 +10,7 @@ const produitEnStockRouter = require('./routes/produitEnStockRoutes');
 const reglementRouter = require('./routes/reglementRoutes');
 const transactionRouter = require('./routes/transactionRoutes');
 const paiementRouter = require('./routes/paiementRoutes');
+const bonLivraisonRouter = require('./routes/bonLivraisonRoutes');
 
 
 
@@ -36,6 +37,7 @@ app.use('/api/v1/facture', factureRouter);
 app.use('/api/v1/reglement', reglementRouter);
 app.use('/api/v1/transaction', transactionRouter);
 app.use('/api/v1/paiement', paiementRouter);
+app.use('/api/v1/bonLivraison', bonLivraisonRouter);
 
 
 module.exports = app;

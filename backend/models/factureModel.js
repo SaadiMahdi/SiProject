@@ -12,10 +12,16 @@ const factureSchema = new mongoose.Schema({
         ref: "Fournisseur",
         required: true,
     },
-    montantFacture:{
-        type: Number,
-        required: true
-    }
+    listeProduits: [
+        {
+            produit: { type: ObjectId, ref: "ProduitEnStock" },
+            quantite: {
+                type: Number,
+                required: true,
+            },
+        },
+    ],
+
 })
 
 const Facture = mongoose.model('Facture',factureSchema)

@@ -1,7 +1,5 @@
 const Produit = require('./../models/ProduitModel');
 
-
-
 exports.getAllProduits = async (req, res) => {
   try {
     const produits = await Produit.find({})
@@ -41,10 +39,42 @@ exports.getProduit = async (req, res) => {
   }
 };
 
+exports.getProduitByCategorie = async (req, res) => {
+  try {
+    const produit = await Produit.find({categorie: req.params.id})
+    .populate('categorie')
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        produit
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+};
+
+
 exports.createProduit = async (req, res) => {
   try {
 
     const newProduit = await Produit.create(req.body);
+    
+    const produit = await Produit.findOne
+    ({designation: req.body.designation})
+    if(produit){
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Produit already exist'
+      });
+    }
+
+    await newProduit.save();
+
 
     res.status(201).json({
       status: 'success',

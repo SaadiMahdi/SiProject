@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema.Types;
 
 
 const blSchema = new mongoose.Schema({
@@ -15,10 +16,15 @@ const blSchema = new mongoose.Schema({
             'non réglé'
         ]
     },
-    montantFacture:{
-        type: Number,
-        required: true
-    }
+    listeProduits: [
+        {
+            id: { type: ObjectId, ref: "ProduitEnStock" },
+            quantite: {
+                type: Number,
+                required: true,
+            },
+        },
+    ],
 })
 
 const BonLivraison = mongoose.model('BonLivraison',blSchema)

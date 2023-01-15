@@ -9,6 +9,11 @@ const paiementSchema = new mongoose.Schema({
         ref: "Client",
         required: true,
     },
+    transaction:{
+        type: ObjectId,
+        ref:"Transaction",
+        required: true
+    },
     montant:{
         type: Number,
         required:true

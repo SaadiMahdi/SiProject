@@ -5,9 +5,7 @@ const ProduitEnStock = require('./../models/ProduitEnStockModel');
 exports.getAllProduitsEnStock = async (req, res) => {
   try {
     const produits = await ProduitEnStock.find({})
-    .populate("produit", "id")
-    .populate("facture", "_id")
-    .populate("bonDeCommande", "_id")
+    .populate("produit")
 
     res.status(200).json({
       status: 'success',
@@ -27,9 +25,7 @@ exports.getAllProduitsEnStock = async (req, res) => {
 exports.getProduitEnStock = async (req, res) => {
   try {
     const produit = await ProduitEnStock.findById(req.params.id)
-    .populate("produit", "id")
-    .populate("facture", "_id")
-    .populate("bonDeCommande", "_id")
+    .populate("produit")
 
     res.status(200).json({
       status: 'success',

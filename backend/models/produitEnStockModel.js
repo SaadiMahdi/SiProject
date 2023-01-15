@@ -8,21 +8,6 @@ const produitEnStockSchema = new mongoose.Schema({
         required: true,
         ref: 'Produit'
     },
-    facture:{
-        type: ObjectId,
-        required: false, 
-        ref: 'Facture'
-    },
-    bonDeCommande:{
-        type: ObjectId,
-        required: false, 
-        ref: 'bonDeCommande'
-    },
-    bonDeLivraison:{
-        type: ObjectId,
-        required: false, 
-        ref: 'BonLivraison'
-    },
     prixVente:{
         type: Number,
         required: false,
