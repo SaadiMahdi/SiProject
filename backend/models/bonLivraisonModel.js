@@ -18,7 +18,7 @@ const blSchema = new mongoose.Schema({
     },
     listeProduits: [
         {
-            id: { type: ObjectId, ref: "ProduitEnStock" },
+            produit: { type: ObjectId, ref: "Produit" },
             quantite: {
                 type: Number,
                 required: true,

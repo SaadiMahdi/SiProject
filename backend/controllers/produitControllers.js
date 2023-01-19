@@ -64,18 +64,6 @@ exports.createProduit = async (req, res) => {
 
     const newProduit = await Produit.create(req.body);
     
-    const produit = await Produit.findOne
-    ({designation: req.body.designation})
-    if(produit){
-      return res.status(404).json({
-        status: 'fail',
-        message: 'Produit already exist'
-      });
-    }
-
-    await newProduit.save();
-
-
     res.status(201).json({
       status: 'success',
       data: {

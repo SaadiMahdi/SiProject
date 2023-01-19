@@ -6,7 +6,8 @@ const produitSchema = new mongoose.Schema({
     designation: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: [true, 'Ce produit existe déjà']
      },
     categorie:{
         type: ObjectId,

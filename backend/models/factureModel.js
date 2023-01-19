@@ -14,10 +14,15 @@ const factureSchema = new mongoose.Schema({
     },
     listeProduits: [
         {
-            produit: { type: ObjectId, ref: "ProduitEnStock" },
+            produit: { type: ObjectId, ref: "Produit" },
+            prix: {
+                type: Number,
+                required: true,
+            },
             quantite: {
                 type: Number,
                 required: true,
+                min:1
             },
         },
     ],
