@@ -83,7 +83,7 @@ exports.updateProduitEnStock = async (req, res) => {
 
 exports.deleteProduitEnStock = async (req, res) => {
   try {
-    await Produit.findByIdAndDelete(req.params.id);
+    await ProduitEnStock.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',
