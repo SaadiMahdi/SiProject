@@ -9,7 +9,8 @@ const reglementSchema = new mongoose.Schema({
     },
     facture:{
         type: ObjectId,
-        ref: "Produit" 
+        ref: "Facture" ,
+        required: true
     },
     montant: {
         type: Number,
