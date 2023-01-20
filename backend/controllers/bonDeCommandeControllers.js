@@ -26,8 +26,8 @@ exports.getBon = async (req, res) => {
   try {
     const bon = await bonDeCommande
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
-      .populate("listeProduits.id", "_id designation");
+      .populate("fournisseur", "_id name")
+      .populate("listeProduits.produit", "_id designation");
 
     res.status(200).json({
       status: "success",
