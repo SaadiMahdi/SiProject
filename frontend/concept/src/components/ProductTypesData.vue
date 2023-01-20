@@ -1,114 +1,114 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="types"
-    sort-by="calories"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              New Product Type
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="categories.data.categorie"
+      sort-by="products"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-spacer></v-spacer>
+          <template>
+            <v-btn color="primary" dark class="mb-2" @click="editItem()">
+              New Category
             </v-btn>
           </template>
-          <v-card>
-            <v-card-title>
-              <span class="">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="">Add Category</span>
+              </v-card-title>
+              <form action="" method="post">
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-text-field
+                        v-model="category.designation"
+                        label="Category"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                    <!-- <v-row>
                   <v-text-field
-                    v-model="editedItem.type"
-                    label="Type"
+                    v-model="product.date"
+                    label="Added The"
                     outlined
                   ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.id"
-                    label="Id"
+                </v-row> -->
+                    <!-- <v-row>
+                  <v-select
+                    :items="categories.data.categorie"
+                    label="Product Type"
                     outlined
-                    disabled
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.nbr_products"
-                    label="Products"
-                    outlined
-                    disabled
-                  ></v-text-field>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="close"> Cancel </v-btn>
-              <v-btn color="primary" @click="save"> Save </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="align-center"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions class="rounded-xl">
-              <v-spacer></v-spacer>
-              <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <h3 class="secondary--text">No Products Yet?</h3>
-      <p>Add products to your store and start selling to see products here</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
-    </template>
-  </v-data-table>
+                  ></v-select>
+                </v-row> -->
+                  </v-container>
+                </v-card-text>
+              </form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="close"> Cancel </v-btn>
+                <v-btn color="primary" @click="save"> Save </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="align-center"
+                >Are you sure you want to delete this item?</v-card-title
+              >
+              <v-card-actions class="rounded-xl">
+                <v-spacer></v-spacer>
+                <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
+      </template>
+      <template v-slot:no-data>
+        <h3 class="secondary--text">No Products Yet?</h3>
+        <p>Add products to your store and start selling to see products here</p>
+        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 
 <script>
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
     headers: [
       {
-        text: "Type",
+        text: "Category",
         align: "start",
         sortable: false,
-        value: "type",
+        value: "designation",
       },
-      { text: "Tracking ID", value: "id" },
-      { text: "Product w/ This type", value: "nbr_products" },
+      { text: "Added The", value: "date" },
+      { text: "Number Of Products", value: "nbr_products" },
+      { text: "Tracking ID", value: "_id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    types: [],
-    editedIndex: -1,
-    editedItem: {
-      type: "",
-      id: 0,
+    categories: [],
+    selectedId: null,
+    category: {
+      designation: "",
+      date: 0,
       nbr_products: 0,
-    },
-    defaultItem: {
-      type: "",
       id: 0,
-      nbr_products: 0,
     },
   }),
 
@@ -127,106 +127,58 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getCategory();
   },
 
   methods: {
-    initialize() {
-      this.types = [
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-        {
-          type: "Frozen Yogurt",
-          id: 159,
-          nbr_products: 6.0,
-        },
-      ];
+    getCategory() {
+      axios
+        .get("http://localhost:3000/api/v1/categorie")
+        .then((response) => {
+          this.categories = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-
     editItem(item) {
-      this.editedIndex = this.types.indexOf(item);
-      this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.types.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    deleteItem(id) {
       this.dialogDelete = true;
+      this.selectedId = id;
     },
 
-    deleteItemConfirm() {
-      this.types.splice(this.editedIndex, 1);
+    deleteItemConfirm(id) {
+      console.log(id);
+      axios.delete("http://localhost:3000/api/v1/categorie/" + id);
       this.closeDelete();
+      this.getCategory();
+      this.$forceUpdate();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.types[this.editedIndex], this.editedItem);
-      } else {
-        this.types.push(this.editedItem);
-      }
+      axios
+        .post("http://localhost:3000/api/v1/categorie/", this.category)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
+      this.category.designation = "";
+      this.getCategory();
     },
   },
 };

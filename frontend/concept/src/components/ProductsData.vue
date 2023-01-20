@@ -1,86 +1,91 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="products"
-    sort-by="products"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="prod.data.produits"
+      sort-by="products"
+      class="elevation-1"
+    >
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-spacer></v-spacer>
+          <template>
+            <v-btn color="primary" dark class="mb-2" @click="editItem()">
               New Product
             </v-btn>
           </template>
-          <v-card>
-            <v-card-title>
-              <span class="">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="">Add product</span>
+              </v-card-title>
+              <form action="" method="post">
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-text-field
+                        v-model="product.designation"
+                        label="Product"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                    <!-- <v-row>
                   <v-text-field
-                    v-model="editedItem.product"
-                    label="Product"
-                    outlined
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.date"
+                    v-model="product.date"
                     label="Added The"
                     outlined
                   ></v-text-field>
-                </v-row>
-                <v-row>
+                </v-row> -->
+                    <!-- <v-row>
                   <v-select
-                    :items="types"
+                    :items="categories.data.categorie"
                     label="Product Type"
                     outlined
                   ></v-select>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="close"> Cancel </v-btn>
-              <v-btn color="primary" @click="save"> Save </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="align-center"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions class="rounded-xl">
-              <v-spacer></v-spacer>
-              <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <h3 class="secondary--text">No Products Yet?</h3>
-      <p>Add products to your store and start selling to see products here</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
-    </template>
-  </v-data-table>
+                </v-row> -->
+                  </v-container>
+                </v-card-text>
+              </form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="close"> Cancel </v-btn>
+                <v-btn color="primary" @click="save"> Save </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="align-center"
+                >Are you sure you want to delete this item?</v-card-title
+              >
+              <v-card-actions class="rounded-xl">
+                <v-spacer></v-spacer>
+                <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
+      </template>
+      <template v-slot:no-data>
+        <h3 class="secondary--text">No Products Yet?</h3>
+        <p>Add products to your store and start selling to see products here</p>
+        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 
 <script>
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
@@ -90,24 +95,18 @@ export default {
         text: "Product",
         align: "start",
         sortable: false,
-        value: "product",
+        value: "designation",
       },
       { text: "Added The", value: "date" },
-      { text: "Product Type", value: "type" },
-      { text: "Tracking ID", value: "id" },
+      { text: "Product Type", value: "categorie.designation" },
+      { text: "Tracking ID", value: "_id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    products: [],
-    types:['Test1','Tshirt','This is a test'],
-    editedIndex: -1,
-    editedItem: {
-      product: "",
-      date: 0,
-      type: 0,
-      id: 0,
-    },
-    defaultItem: {
-      product: "",
+    prod: [],
+    categories: [],
+    selectedId: null,
+    product: {
+      designation: "",
       date: 0,
       type: 0,
       id: 0,
@@ -129,116 +128,67 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getProduct();
+    axios
+      .get("http://localhost:3000/api/v1/categorie")
+      .then((response) => {
+        this.categories = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 
   methods: {
-    initialize() {
-      this.products = [
-        {
-          product: "Frozen Yogurt",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Ice cream sandwich",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Eclair",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Cupcake",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Gingerbread",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Jelly bean",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Lollipop",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Honeycomb",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "Donut",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-        {
-          product: "KitKat",
-          date: 0,
-          type: 0,
-          id: 0,
-        },
-      ];
+    getProduct() {
+      axios
+        .get("http://localhost:3000/api/v1/produit")
+        .then((response) => {
+          this.prod = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-
     editItem(item) {
-      this.editedIndex = this.products.indexOf(item);
-      this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.products.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    deleteItem(id) {
       this.dialogDelete = true;
+      this.selectedId = id;
     },
 
-    deleteItemConfirm() {
-      this.products.splice(this.editedIndex, 1);
+    deleteItemConfirm(id) {
+      console.log(id);
+      axios.delete("http://localhost:3000/api/v1/produit/" + id);
       this.closeDelete();
+      this.getProduct();
+      this.$forceUpdate();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.products.push(this.editedItem);
-      }
+      axios
+        .post("http://localhost:3000/api/v1/produit/", this.product)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
+      this.product.designation = "";
+      this.getProduct();
+      this.$forceUpdate();
     },
   },
 };
