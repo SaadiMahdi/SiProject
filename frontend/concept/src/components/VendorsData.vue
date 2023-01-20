@@ -20,7 +20,7 @@
                   <v-text-field v-model="vendor.name" label="Vendor" outlined></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field v-model="vendor.address" label="Adress" outlined></v-text-field>
+                  <v-text-field v-model="vendor.address" label="Address" outlined></v-text-field>
                 </v-row>
                 <v-row>
                   <v-text-field v-model="vendor.phone" label="Phone" outlined></v-text-field>

@@ -1,8 +1,8 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="customers"
-    sort-by="calories"
+    :items="customers.data.client"
+    sort-by="customers"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -23,36 +23,36 @@
               <v-container>
                 <v-row>
                   <v-text-field
-                    v-model="editedItem.customer"
+                    v-model="customer.name"
                     label="Customer"
                     outlined
                   ></v-text-field>
                 </v-row>
-                <v-row>
+                <!-- <v-row>
                   <v-text-field
-                    v-model="editedItem.date"
+                    v-model="customer.date"
                     label="Added the"
                     outlined
                     disabled
                   ></v-text-field>
-                </v-row>
+                </v-row> -->
                 <v-row>
                   <v-text-field
-                    v-model="editedItem.email"
-                    label="Email"
+                    v-model="customer.address"
+                    label="Address"
                     outlined
                   ></v-text-field>
                 </v-row>
                 <v-row>
                   <v-text-field
-                    v-model="editedItem.phone"
+                    v-model="customer.phone"
                     label="Phone"
                     outlined
                   ></v-text-field>
                 </v-row>
                 <v-row>
                   <v-text-field
-                    v-model="editedItem.credit"
+                    v-model="customer.credit"
                     label="Credit"
                     outlined
                   ></v-text-field>
@@ -67,6 +67,40 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogEdit" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="">Modify customer</span>
+            </v-card-title>
+            <form action="" method="post">
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-text-field v-model="customer.name" label="customer" outlined></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field v-model="customer.address" label="Adress" outlined></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field v-model="customer.phone" label="Phone" outlined></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="customer.credit"
+                    label="credit"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+              </v-container>
+            </v-card-text>
+          </form>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
+              <v-btn color="primary" @click="edit(selectedId)"> Save </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
             <v-card-title class="align-center"
@@ -75,7 +109,7 @@
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="primary " @click="deleteItemConfirm(selectedId)">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -83,8 +117,8 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+      <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
       <h3 class="secondary--text">No Customers Yet?</h3>
@@ -96,36 +130,30 @@
 
 
 <script>
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
+    dialogEdit: false,
     dialogDelete: false,
+    selectedId: null,
     headers: [
       {
         text: "Customers",
         align: "start",
         sortable: false,
-        value: "customer",
+        value: "name",
       },
-      { text: "Added The", value: "date" },
-      { text: "Email", value: "email" },
+      { text: "Address", value: "address" },
       { text: "Phone", value: "phone" },
       { text: "Credit", value: "credit" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     customers: [],
     editedIndex: -1,
-    editedItem: {
-      customer: "",
-      date: 0,
-      email: 0,
-      phone: 0,
-      credit: 0,
-    },
-    defaultItem: {
-      customer: "",
-      date: 0,
-      email: 0,
+    customer: {
+      name: "",
+      address: "",
       phone: 0,
       credit: 0,
     },
@@ -146,126 +174,71 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getCustomer();
   },
 
   methods: {
-    initialize() {
-      this.customers = [
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-        {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
-        },
-      ];
+    getCustomer() {
+      axios.get('http://localhost:3000/api/v1/client')
+        .then((response) => {
+          this.customers = response.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
 
-    editItem(item) {
-      this.editedIndex = this.customers.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    InsertItem(item) {
       this.dialog = true;
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.customers.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
+    editItem(id) {
+      this.dialogEdit = true;
+      this.selectedId = id;
     },
 
-    deleteItemConfirm() {
-      this.customers.splice(this.editedIndex, 1);
+    edit(id) {
+      axios.patch("http://localhost:3000/api/v1/client/" + id, this.customer);
+      this.closeEdit();
+      this.getCustomer();
+      this.$forceUpdate();
+    },
+
+    deleteItem(id) {
+      this.dialogDelete = true;
+      this.selectedId = id;
+    },
+
+    deleteItemConfirm(id) {
+      axios.delete('http://localhost:3000/api/v1/client/' + id);
       this.closeDelete();
+      this.getCustomer();
+      this.$forceUpdate();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+    },
+    closeEdit() {
+      this.dialogEdit = false;
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.customers[this.editedIndex], this.editedItem);
-      } else {
-        this.customers.push(this.editedItem);
-      }
+      axios.post('http://localhost:3000/api/v1/client', this.customer)
+        .then((response) => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
       this.close();
+      this.getCustomer();
+      this.$forceUpdate();
     },
   },
 };
