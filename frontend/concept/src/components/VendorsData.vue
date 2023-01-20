@@ -2,8 +2,8 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="desserts"
-    sort-by="calories"
+    :items="vendors"
+    sort-by="vendors"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -23,41 +23,32 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
+                  <v-text-field
+                    v-model="editedItem.vendor"
+                    label="Vendor"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="editedItem.email"
+                    label="Email"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="editedItem.phone"
+                    label="Phone"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="editedItem.orders"
+                    label="Orders"
+                    outlined
+                  ></v-text-field>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -107,26 +98,26 @@ export default {
         text: "Vendor Name",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "vendor",
       },
-      { text: "Email", value: "calories" },
-      { text: "Phone", value: "fat" },
-      { text: "Orders", value: "carbs" },
-      { text: "Total Orders", value: "actions", sortable: false },
+      { text: "Email", value: "email" },
+      { text: "Phone", value: "phone" },
+      { text: "Orders", value: "orders" },
+      { text: "Action", value: "actions", sortable: false },
     ],
-    desserts: [],
+    vendors: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+      vendor: "",
+      email: 0,
+      phone: 0,
+      orders: 0,
     },
     defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+      vendor: "",
+      email: 0,
+      phone: 0,
+      orders: 0,
     },
   }),
 
@@ -151,84 +142,84 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
+      this.vendors = [
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
+          vendor: "Frozen Yogurt",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
+          vendor: "Ice cream sandwich",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
+          vendor: "Eclair",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
+          vendor: "Cupcake",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
+          vendor: "Gingerbread",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
+          vendor: "Jelly bean",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
+          vendor: "Lollipop",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
+          vendor: "Honeycomb",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
+          vendor: "Donut",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
         {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
+          vendor: "KitKat",
+          email: 159,
+          phone: 6.0,
+          orders: 24,
         },
       ];
     },
 
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.vendors.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.vendors.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+      this.vendors.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -252,7 +243,7 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.vendors.push(this.editedItem);
       }
       this.close();
     },

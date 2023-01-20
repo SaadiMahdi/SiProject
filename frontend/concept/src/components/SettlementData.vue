@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="customers"
+    :items="desserts"
     sort-by="calories"
     class="elevation-1"
   >
@@ -11,7 +11,7 @@
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              New Customer
+              New settlement
             </v-btn>
           </template>
           <v-card>
@@ -22,40 +22,41 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-text-field
-                    v-model="editedItem.customer"
-                    label="Customer"
-                    outlined
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.date"
-                    label="Added the"
-                    outlined
-                    disabled
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.email"
-                    label="Email"
-                    outlined
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.phone"
-                    label="Phone"
-                    outlined
-                  ></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="editedItem.credit"
-                    label="Credit"
-                    outlined
-                  ></v-text-field>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      label="Dessert name"
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.calories"
+                      label="Calories"
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.fat"
+                      label="Fat (g)"
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.carbs"
+                      label="Carbs (g)"
+                      outlined
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.protein"
+                      label="Protein (g)"
+                      outlined
+                    ></v-text-field>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -87,8 +88,8 @@
       <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
-      <h3 class="secondary--text">No Customers Yet?</h3>
-      <p>That's sad, lonely store..</p>
+      <h3 class="secondary--text">No Products Yet?</h3>
+      <p>Add products to your store and start selling to see products here</p>
       <v-btn color="primary" @click="initialize"> Reset </v-btn>
     </template>
   </v-data-table>
@@ -97,37 +98,35 @@
 
 <script>
 export default {
+    name: "SettlementData",
   data: () => ({
     dialog: false,
     dialogDelete: false,
     headers: [
       {
-        text: "Customers",
+        text: "Product",
         align: "start",
         sortable: false,
-        value: "customer",
+        value: "name",
       },
-      { text: "Added The", value: "date" },
-      { text: "Email", value: "email" },
-      { text: "Phone", value: "phone" },
-      { text: "Credit", value: "credit" },
+      { text: "Added The", value: "calories" },
+      { text: "Product Type", value: "fat" },
+      { text: "Tracking ID", value: "carbs" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    customers: [],
+    desserts: [],
     editedIndex: -1,
     editedItem: {
-      customer: "",
-      date: 0,
-      email: 0,
-      phone: 0,
-      credit: 0,
+      name: "",
+      calories: 0,
+      fat: 0,
+      carbs: 0,
     },
     defaultItem: {
-      customer: "",
-      date: 0,
-      email: 0,
-      phone: 0,
-      credit: 0,
+      name: "",
+      calories: 0,
+      fat: 0,
+      carbs: 0,
     },
   }),
 
@@ -152,94 +151,84 @@ export default {
 
   methods: {
     initialize() {
-      this.customers = [
+      this.desserts = [
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Frozen Yogurt",
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Ice cream sandwich",
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Eclair",
+          calories: 262,
+          fat: 16.0,
+          carbs: 23,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Cupcake",
+          calories: 305,
+          fat: 3.7,
+          carbs: 67,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Gingerbread",
+          calories: 356,
+          fat: 16.0,
+          carbs: 49,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Jelly bean",
+          calories: 375,
+          fat: 0.0,
+          carbs: 94,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Lollipop",
+          calories: 392,
+          fat: 0.2,
+          carbs: 98,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Honeycomb",
+          calories: 408,
+          fat: 3.2,
+          carbs: 87,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "Donut",
+          calories: 452,
+          fat: 25.0,
+          carbs: 51,
         },
         {
-          customer: "Frozen Yogurt",
-          date: 159,
-          email: 6.0,
-          phone: 24,
-          credit: 4.0,
+          name: "KitKat",
+          calories: 518,
+          fat: 26.0,
+          carbs: 65,
         },
       ];
     },
 
     editItem(item) {
-      this.editedIndex = this.customers.indexOf(item);
+      this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.customers.indexOf(item);
+      this.editedIndex = this.desserts.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.customers.splice(this.editedIndex, 1);
+      this.desserts.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -261,9 +250,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.customers[this.editedIndex], this.editedItem);
+        Object.assign(this.desserts[this.editedIndex], this.editedItem);
       } else {
-        this.customers.push(this.editedItem);
+        this.desserts.push(this.editedItem);
       }
       this.close();
     },

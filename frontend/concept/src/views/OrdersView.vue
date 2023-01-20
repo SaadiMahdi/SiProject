@@ -16,9 +16,6 @@
           <li>
             <v-btn :class="{active: settlements}" @click="getSettlements" plain >Settlements</v-btn>
           </li>
-          <li>
-            <v-btn color="primary" depressed>+ Add new Order</v-btn>
-          </li>
         </ul>
       </div>
       <div class="grid-page">
@@ -31,6 +28,12 @@
         <div class="stats">
           <OrdersData v-if="orders"/>
         </div>
+        <div class="stats">
+          <BillsData v-if="bills"/>
+        </div>
+        <div class="stats">
+          <SettlementData v-if="settlements"/>
+        </div>
       </div>
     </div>
   </div>
@@ -41,6 +44,8 @@ import AppSlideBar from "../components/AppSlideBar";
 import AppNavBar from "../components/AppNavBar";
 import InfoCard from "../components/InfoCard.vue";
 import OrdersData from "../components/OrdersData.vue";
+import BillsData from "../components/BillsData.vue";
+import SettlementData from "../components/SettlementData.vue";
 
 export default {
   components: {
@@ -48,6 +53,8 @@ export default {
     AppNavBar,
     InfoCard,
     OrdersData,
+    BillsData,
+    SettlementData,
   },
   data() {
     return {

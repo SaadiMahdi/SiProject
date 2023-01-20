@@ -1,27 +1,33 @@
 <template>
-  <v-data-table :headers="headers" :items="desserts" sort-by="calories" class="elevation-1">
+  <v-data-table
+    :headers="headers"
+    :items="desserts"
+    sort-by="calories"
+    class="elevation-1"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
-        <div class="header">
+        <!-- <div class="header">
           <ul>
             <li>
-              <v-text-field height="30px" append-icon="mdi-magnify" label="Search" single-line
-                hide-details></v-text-field>
+              <v-text-field
+                height="30px"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+              ></v-text-field>
             </li>
             <li>
               <v-btn width="80px" outlined>
-                <v-icon left>
-                  mdi-filter-outline
-                </v-icon>
+                <v-icon left> mdi-filter-outline </v-icon>
                 Filter
               </v-btn>
             </li>
             <li>
               <v-btn width="80px" outlined>
-                <v-icon left>
-                  mdi-calendar
-                </v-icon>
+                <v-icon left> mdi-calendar </v-icon>
                 Filter
               </v-btn>
             </li>
@@ -29,8 +35,13 @@
               <v-btn width="45px" outlined>Print</v-btn>
             </li>
           </ul>
-        </div>
+        </div> -->
         <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+              New Order
+            </v-btn>
+          </template>
           <v-card>
             <v-card-title>
               <span class="">{{ formTitle }}</span>
@@ -40,19 +51,39 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name" outlined></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.name"
+                      label="Dessert name"
+                      outlined
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories" outlined></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.calories"
+                      label="Calories"
+                      outlined
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)" outlined></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.fat"
+                      label="Fat (g)"
+                      outlined
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)" outlined></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.carbs"
+                      label="Carbs (g)"
+                      outlined
+                    ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.protein" label="Protein (g)" outlined></v-text-field>
+                    <v-text-field
+                      v-model="editedItem.protein"
+                      label="Protein (g)"
+                      outlined
+                    ></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -67,7 +98,9 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="align-center">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="align-center"
+              >Are you sure you want to delete this item?</v-card-title
+            >
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>

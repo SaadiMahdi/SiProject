@@ -1,8 +1,8 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="desserts"
-    sort-by="calories"
+    :items="products"
+    sort-by="products"
     class="elevation-1"
   >
     <template v-slot:top>
@@ -22,41 +22,25 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
+                  <v-text-field
+                    v-model="editedItem.product"
+                    label="Product"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="editedItem.date"
+                    label="Added The"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-select
+                    :items="types"
+                    label="Product Type"
+                    outlined
+                  ></v-select>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -106,26 +90,27 @@ export default {
         text: "Product",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "product",
       },
-      { text: "Added The", value: "calories" },
-      { text: "Product Type", value: "fat" },
-      { text: "Tracking ID", value: "carbs" },
+      { text: "Added The", value: "date" },
+      { text: "Product Type", value: "type" },
+      { text: "Tracking ID", value: "id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    desserts: [],
+    products: [],
+    types:['Test1','Tshirt','This is a test'],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+      product: "",
+      date: 0,
+      type: 0,
+      id: 0,
     },
     defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+      product: "",
+      date: 0,
+      type: 0,
+      id: 0,
     },
   }),
 
@@ -150,84 +135,84 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
+      this.products = [
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
+          product: "Frozen Yogurt",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
+          product: "Ice cream sandwich",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
+          product: "Eclair",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
+          product: "Cupcake",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
+          product: "Gingerbread",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
+          product: "Jelly bean",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
+          product: "Lollipop",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
+          product: "Honeycomb",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
+          product: "Donut",
+          date: 0,
+          type: 0,
+          id: 0,
         },
         {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
+          product: "KitKat",
+          date: 0,
+          type: 0,
+          id: 0,
         },
       ];
     },
 
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+      this.products.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -251,7 +236,7 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.desserts[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.products.push(this.editedItem);
       }
       this.close();
     },

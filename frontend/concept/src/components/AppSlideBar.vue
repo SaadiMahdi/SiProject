@@ -1,21 +1,8 @@
 <template>
   <!-- I added only two links for now -->
-  <v-navigation-drawer permanent expand-on-hover class="rounded-lg">
-    <v-list>
-      <v-list-item class="px-2">
-        <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-        </v-list-item-avatar>
-      </v-list-item>
-
-      <v-list-item link>
-        <v-list-item-content>
-          <v-list-item-title class="text-h6"> Sandra Adams </v-list-item-title>
-          <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-
+  <v-navigation-drawer permanent expand-on-hover class="rounded-lg" v-model="drawer">
+    <v-img v-if="drawer" :src=newLogo class=" "></v-img>
+    <v-img v-else :src=oldLogo class=" "></v-img>
     <v-divider></v-divider>
 
     <v-list nav>
@@ -47,7 +34,7 @@
         <v-list-item-icon>
           <v-icon>mdi-star</v-icon>
         </v-list-item-icon>
-        <v-list-item-title>Sales</v-list-item-title>
+        <v-list-item-title>Sales & Payment</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
@@ -59,6 +46,9 @@ export default {
   name: "AppSlideBar",
 
   data: () => ({
+    drawer: false,
+    oldLogo: require("../assets/SmallLogo.png"),
+    newLogo: require("../assets/ConceptLogo.png"),
     //
   }),
 };
@@ -71,7 +61,5 @@ export default {
   height: 100%;
 }
 
-.v-navigation-drawer {
-  height: 100%;
-}
+
 </style>

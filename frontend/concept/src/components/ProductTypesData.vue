@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="desserts"
+    :items="types"
     sort-by="calories"
     class="elevation-1"
   >
@@ -22,41 +22,27 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
+                  <v-text-field
+                    v-model="editedItem.type"
+                    label="Type"
+                    outlined
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="editedItem.id"
+                    label="Id"
+                    outlined
+                    disabled
+                  ></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field
+                    v-model="editedItem.nbr_products"
+                    label="Products"
+                    outlined
+                    disabled
+                  ></v-text-field>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -106,23 +92,23 @@ export default {
         text: "Type",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "type",
       },
-      { text: "Tracking ID", value: "calories" },
-      { text: "Product w/ This type", value: "fat" },
+      { text: "Tracking ID", value: "id" },
+      { text: "Product w/ This type", value: "nbr_products" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    desserts: [],
+    types: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
+      type: "",
+      id: 0,
+      nbr_products: 0,
     },
     defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
+      type: "",
+      id: 0,
+      nbr_products: 0,
     },
   }),
 
@@ -147,74 +133,74 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
+      this.types = [
         {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
         {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
+          type: "Frozen Yogurt",
+          id: 159,
+          nbr_products: 6.0,
         },
       ];
     },
 
     editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.types.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
+      this.editedIndex = this.types.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+      this.types.splice(this.editedIndex, 1);
       this.closeDelete();
     },
 
@@ -236,9 +222,9 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        Object.assign(this.types[this.editedIndex], this.editedItem);
       } else {
-        this.desserts.push(this.editedItem);
+        this.types.push(this.editedItem);
       }
       this.close();
     },
