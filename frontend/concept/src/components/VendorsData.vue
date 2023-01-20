@@ -47,6 +47,7 @@
             <v-card-title>
               <span class="">Modify vendor</span>
             </v-card-title>
+            <form action="" method="post">
             <v-card-text>
               <v-container>
                 <v-row>
@@ -67,7 +68,7 @@
                 </v-row> -->
               </v-container>
             </v-card-text>
-
+          </form>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
