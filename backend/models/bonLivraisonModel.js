@@ -9,13 +9,6 @@ const blSchema = new mongoose.Schema({
         ref: "Fournisseur",
         required: true,
     },
-    etat:{
-        type: String,
-        enum:[
-            'réglé',
-            'non réglé'
-        ]
-    },
     listeProduits: [
         {
             produit: { type: ObjectId, ref: "Produit" },
