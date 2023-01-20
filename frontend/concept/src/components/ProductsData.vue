@@ -37,15 +37,16 @@
                   ></v-text-field>
                 </v-row> -->
                     <v-row>
-                  <v-select
-                    :items="categories.data.categorie"
-                    v-model="product.categorie"
-                    label="Product Type"
-                    outlined
-                    return-object item-text="designation" 
-                    item-value="_id"
-                  ></v-select>
-                </v-row>
+                      <v-select
+                        :items="categories.data.categorie"
+                        v-model="product.categorie"
+                        label="Product Type"
+                        outlined
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                    </v-row>
                   </v-container>
                 </v-card-text>
               </form>
@@ -79,15 +80,16 @@
                   ></v-text-field>
                 </v-row> -->
                     <v-row>
-                  <v-select
-                    :items="categories.data.categorie"
-                    v-model="product.categorie"
-                    label="Product Type"
-                    outlined
-                    return-object item-text="designation" 
-                    item-value="_id"
-                  ></v-select>
-                </v-row>
+                      <v-select
+                        :items="categories.data.categorie"
+                        v-model="product.categorie"
+                        label="Product Type"
+                        outlined
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                    </v-row>
                   </v-container>
                 </v-card-text>
               </form>
@@ -116,13 +118,15 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item._id)">
+          mdi-pencil
+        </v-icon>
         <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data>
         <h3 class="secondary--text">No Products Yet?</h3>
         <p>Add products to your store and start selling to see products here</p>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        <v-btn color="primary" @click="InsertItem()"> Add Product </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -159,8 +163,7 @@ export default {
     },
   }),
 
-  computed: {
-  },
+  computed: {},
 
   watch: {
     dialog(val) {
@@ -190,30 +193,30 @@ export default {
           console.log(error);
         });
     },
-    getCategory(){
+    getCategory() {
       axios
-      .get("http://localhost:3000/api/v1/categorie")
-      .then((response) => {
-        this.categories = response.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .get("http://localhost:3000/api/v1/categorie")
+        .then((response) => {
+          this.categories = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     InsertItem(item) {
       this.dialog = true;
     },
-      editItem(id){
-        this.dialogEdit = true;
-        this.selectedId = id;
-      },
-      edit(id){
-        axios.patch("http://localhost:3000/api/v1/produit/" + id, this.product);
-        this.closeEdit();
-        this.product.designation = "";
-        this.getProduct();
-        this.$forceUpdate();
-      },
+    editItem(id) {
+      this.dialogEdit = true;
+      this.selectedId = id;
+    },
+    edit(id) {
+      axios.patch("http://localhost:3000/api/v1/produit/" + id, this.product);
+      this.closeEdit();
+      this.product.designation = "";
+      this.getProduct();
+      this.$forceUpdate();
+    },
 
     deleteItem(id) {
       this.dialogDelete = true;

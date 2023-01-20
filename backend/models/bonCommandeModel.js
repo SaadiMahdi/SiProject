@@ -7,7 +7,7 @@ const bcSchema = new mongoose.Schema({
       produit: { type: ObjectId, ref: "Produit" },
       quantite: {
         type: Number,
-        required: true,
+        required: false,
       },
     },
   ],
@@ -15,6 +15,10 @@ const bcSchema = new mongoose.Schema({
     type: ObjectId,
     ref: "Fournisseur",
     required: true,
+  },
+  date: {
+    type: Date,
+    required: false,
   },
 });
 
