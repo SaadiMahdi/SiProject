@@ -11,7 +11,7 @@ const produitSchema = new mongoose.Schema({
      },
     categorie:{
         type: ObjectId,
-        required: false,
+        required: true,
         ref: 'Categorie'
     }
 })
