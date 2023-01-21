@@ -4,8 +4,8 @@ exports.getAllFactures = async (req, res) => {
   try {
     const factures = await Facture
       .find({})
-      .populate("fournisseur", "_id nom")
-      .populate("listeProduits.produit", "_id ");
+      .populate("fournisseur", "_id name")
+      .populate("listeProduits.produit", "_id designation");
 
     res.status(200).json({
       status: "success",
@@ -26,7 +26,7 @@ exports.getFacture = async (req, res) => {
   try {
     const facture = await Facture
       .findById(req.params.id)
-      .populate("fournisseur", "_id nom")
+      .populate("fournisseur", "_id name")
       .populate("listProduits.produit", "_id designation");
 
     res.status(200).json({

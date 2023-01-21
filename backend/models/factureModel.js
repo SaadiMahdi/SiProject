@@ -5,7 +5,7 @@ const { ObjectId } = mongoose.Schema.Types;
 const factureSchema = new mongoose.Schema({
     date: {
         type: Date,
-        default: Date.now()
+        default: Date.now,
     },
     fournisseur: {
         type: ObjectId,
@@ -18,6 +18,7 @@ const factureSchema = new mongoose.Schema({
             prix: {
                 type: Number,
                 required: true,
+                min:1,
             },
             quantite: {
                 type: Number,
@@ -26,7 +27,6 @@ const factureSchema = new mongoose.Schema({
             },
         },
     ],
-
 })
 
 const Facture = mongoose.model('Facture',factureSchema)
