@@ -12,9 +12,6 @@ const reglementSchema = new mongoose.Schema({
         ref: "Facture" ,
         required: true
     },
-    montant: {
-        type: Number,
-    }
 })
 
 const Reglement = mongoose.model('Reglement',reglementSchema)

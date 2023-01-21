@@ -1,4 +1,4 @@
-const ProduitEnStock = require('./../models/ProduitEnStockModel');
+const ProduitEnStock = require("./../models/produitEnStockModel")();
 
 
 

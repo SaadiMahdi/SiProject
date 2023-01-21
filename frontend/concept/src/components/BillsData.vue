@@ -1,4 +1,5 @@
 <template>
+  
   <v-data-table :headers="headers" :items="bills.data.factures" sort-by="bills" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat>
@@ -216,7 +217,7 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
       <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
@@ -231,6 +232,7 @@
 <script>
 import axios from 'axios';
 export default {
+  props:['totalBills'],
   data: () => ({
     dialog: false,
     dialogEdit: false,
@@ -253,7 +255,6 @@ export default {
     bills: [],
     vendors: [],
     prod: [],
-
     editedIndex: -1,
     bill: {
       id: 0,
@@ -269,6 +270,10 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
+    totalBills() {
+      return this.bills.length;
+    },
+
   },
 
   watch: {
@@ -284,9 +289,14 @@ export default {
     this.getBill();
     this.getVendor();
     this.getProduct();
+    console.log(this.bills)
+    console.log(this.bills.length);
   },
 
   methods: {
+    emitTotalBills() {
+        this.$emit('totalBills', this.totalBills);
+    },
     getBill() {
       axios
         .get("http://localhost:3000/api/v1/facture")
@@ -372,11 +382,6 @@ export default {
     total(){
       return this.bill.listeProduits.reduce((total, item) => total + item.prix, 0)
     },
-
-    numberProducts() {
-        return this.bill.nbr_products = this.bill.listeProduits.length;
-      },
-    
   }
 };
 </script>
