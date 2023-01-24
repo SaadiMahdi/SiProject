@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="orders.data.bons"
+      :items="this.orders"
       sort-by="products"
       class="elevation-1"
     >
@@ -19,13 +19,13 @@
               <v-card-title>
                 <span class="">Add Order</span>
               </v-card-title>
-              <form action="" method="post">
+              <v-form action="" method="post" ref="form">
                 <v-container fluid>
                   <v-row>
                     <v-col cols="6">
                       <!-- first column content -->
                       <v-select
-                        :items="vendors.data.fournisseurs"
+                        :items="vendors"
                         v-model="order.fournisseur"
                         label="Vendor"
                         outlined
@@ -36,7 +36,108 @@
                       <v-dialog
                         ref="dialog"
                         v-model="modal"
-                        :return-value.sync="date"
+                        persistent
+                        width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="order.date"
+                            format="dd/MM/yyyy"
+                            label="Insert Date"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            outlined
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="order.date"
+                          scrollable
+                          format="dd/MM/yyyy"
+                        >
+                          <v-spacer></v-spacer>
+                          <v-btn text color="primary" @click="modal = false">
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            text
+                            color="primary"
+                            @click="$refs.dialog.save(order.date)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-dialog>
+                    </v-col>
+                    <v-col cols="6" class="d-flex flex-column">
+                      <h3 class="mb-3">Items</h3>
+                      <v-select
+                        :items="prod"
+                        v-model="order.listeProduits"
+                        label="Choose Products"
+                        outlined
+                        multiple
+                        chips
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                      <v-container
+                        v-for="produit in order.listeProduits"
+                        :key="produit._id"
+                      >
+                        <v-row>
+                          <v-col>
+                            <v-container>
+                              <h3>{{ produit?.designation }}</h3>
+                              <p class="grey--text">
+                                {{ produit.categorie?.designation }}
+                              </p>
+                            </v-container>
+                          </v-col>
+                          <v-col>
+                            <v-text-field
+                              v-model="produit.quantite"
+                              type="number"
+                              label="Quantity"
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="close"> Cancel </v-btn>
+                <v-btn color="primary" @click="save"> Save </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogEdit" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="">Modify Order</span>
+              </v-card-title>
+              <form action="" method="post">
+                <v-container fluid>
+                  <v-row>
+                    <v-col cols="6">
+                      <!-- first column content -->
+                      <v-select
+                        :items="vendors"
+                        v-model="order.fournisseur"
+                        label="Vendor"
+                        outlined
+                        return-object
+                        item-text="name"
+                        item-value="_id"
+                      ></v-select>
+                      <v-dialog
+                        ref="dialog"
+                        v-model="modal"
                         persistent
                         width="290px"
                       >
@@ -51,7 +152,10 @@
                             outlined
                           ></v-text-field>
                         </template>
-                        <v-date-picker v-model="order.date" scrollable>
+                        <v-date-picker
+                          v-model="order.date"
+                          scrollable
+                        >
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="modal = false">
                             Cancel
@@ -59,7 +163,7 @@
                           <v-btn
                             text
                             color="primary"
-                            @click="$refs.dialog.save(date)"
+                            @click="$refs.dialog.save(order.date)"
                           >
                             OK
                           </v-btn>
@@ -69,7 +173,7 @@
                     <v-col cols="6" class="d-flex flex-column">
                       <h3 class="mb-3">Items</h3>
                       <v-select
-                        :items="prod.data.produits"
+                        :items="prod"
                         v-model="order.listeProduits"
                         label="Choose Products"
                         outlined
@@ -81,12 +185,15 @@
                       ></v-select>
                       <v-container
                         v-for="produit in order.listeProduits"
-                        :key="produit"
+                        :key="produit._id"
                       >
                         <v-row>
                           <v-col>
                             <v-container>
-                              <p>Product: {{ produit.designation }}</p>
+                              <h3>{{ produit?.designation }}</h3>
+                              <p class="grey--text">
+                                {{ produit.categorie?.designation }}
+                              </p>
                             </v-container>
                           </v-col>
                           <v-col>
@@ -94,7 +201,6 @@
                               v-model="produit.quantite"
                               type="number"
                               label="Quantity"
-                              outlined
                             ></v-text-field>
                           </v-col>
                         </v-row>
@@ -102,42 +208,6 @@
                     </v-col>
                   </v-row>
                 </v-container>
-              </form>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" text @click="close"> Cancel </v-btn>
-                <v-btn color="primary" @click="save"> Save </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="dialogEdit" max-width="500px">
-            <v-card>
-              <v-card-title>
-                <span class="">Modify Order</span>
-              </v-card-title>
-              <form action="" method="post">
-                <v-card-text>
-                  <v-container>
-                    <!-- <v-row>
-                  <v-text-field
-                    v-model="product.date"
-                    label="Added The"
-                    outlined
-                  ></v-text-field>
-                </v-row> -->
-                    <v-row>
-                      <v-select
-                        :items="vendors.data.fournisseurs"
-                        v-model="order.fournisseur"
-                        label="Vendor"
-                        outlined
-                        return-object
-                        item-text="name"
-                        item-value="_id"
-                      ></v-select>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
               </form>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -193,8 +263,8 @@ export default {
         sortable: false,
         value: "fournisseur.name",
       },
-      { text: "Ordered The", value: "date" },
-      { text: "Number Of Products", value: "nbr_products" },
+      { text: "Ordered The", value: "date", type: "date" },
+      { text: "Number Of Products", value: "listeProduits.length" },
       { text: "Tracking ID", value: "_id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
@@ -206,13 +276,11 @@ export default {
     order: {
       listeProduits: [],
       fournisseur: null,
-      date: null,
+      date: "",
       nbr_products: 0,
       id: 0,
     },
   }),
-
-  computed: {},
 
   watch: {
     dialog(val) {
@@ -237,17 +305,19 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/bonCommande")
         .then((response) => {
-          this.orders = response.data;
+          this.orders = response.data.data.bons;
+          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
         });
+      console.log("finished getting orders");
     },
     getVendor() {
       axios
         .get("http://localhost:3000/api/v1/fournisseur")
         .then((response) => {
-          this.vendors = response.data;
+          this.vendors = response.data.data.fournisseurs;
         })
         .catch((error) => {
           console.log(error);
@@ -257,7 +327,7 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/produit")
         .then((response) => {
-          this.prod = response.data;
+          this.prod = response.data.data.produits;
         })
         .catch((error) => {
           console.log(error);
@@ -306,22 +376,15 @@ export default {
         .post("http://localhost:3000/api/v1/bonCommande/", this.order)
         .then((response) => {
           console.log(response.data);
+          this.getOrder();
+          this.$refs.form.reset()
+          this.$forceUpdate();
         })
         .catch((error) => {
           console.log(error);
         });
       this.close();
-      this.fournisseur.name = "";
-      this.getOrder();
-      this.$forceUpdate();
     },
-  },
-  computed() {
-    return {
-      numberProducts() {
-        return this.order.nbr_products = this.order.listeProduits.length;
-      },
-    };
   },
 };
 </script>

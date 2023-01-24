@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="prod.data.produits"
+      :items="this.prod"
       sort-by="products"
       class="elevation-1"
     >
@@ -38,7 +38,7 @@
                 </v-row> -->
                     <v-row>
                       <v-select
-                        :items="categories.data.categorie"
+                        :items="categories"
                         v-model="product.categorie"
                         label="Product Type"
                         outlined
@@ -81,7 +81,7 @@
                 </v-row> -->
                     <v-row>
                       <v-select
-                        :items="categories.data.categorie"
+                        :items="categories"
                         v-model="product.categorie"
                         label="Product Type"
                         outlined
@@ -157,8 +157,8 @@ export default {
     selectedId: null,
     product: {
       designation: "",
+      category: null,
       date: 0,
-      type: 0,
       id: 0,
     },
   }),
@@ -187,7 +187,8 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/produit")
         .then((response) => {
-          this.prod = response.data;
+          this.prod = response.data.data.produits;
+          console.log(response)
         })
         .catch((error) => {
           console.log(error);
@@ -197,7 +198,7 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/categorie")
         .then((response) => {
-          this.categories = response.data;
+          this.categories = response.data.data.categorie;
         })
         .catch((error) => {
           console.log(error);
