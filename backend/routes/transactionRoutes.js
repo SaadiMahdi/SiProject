@@ -10,6 +10,7 @@ router
 router
   .route('/:id')
   .get(transactionController.getTransaction)
+  .get(transactionController.getTransactionsByClient)
   .patch(transactionController.updateTransaction)
   .delete(transactionController.deleteTransaction);
 
