@@ -29,7 +29,7 @@
           <OrdersData v-if="orders"/>
         </div>
         <div class="stats">
-          <BillsData v-if="bills"/>
+          <BillsData @totalBills="getTotalBill" v-if="bills"/>
         </div>
         <div class="stats">
           <SettlementData v-if="settlements"/>
@@ -65,7 +65,7 @@ export default {
         },
         {
           title: "All Bills",
-          inf: 0,
+          inf: this.totalBills,
         },
         {
           title: "All Settlements",
@@ -87,9 +87,13 @@ export default {
       orders : true,
       bills: false,
       settlements: false,
+      totalBills:0,
     }
   },
   methods: {
+    getTotalBill(count){
+      this.totalBills = count;
+    },
     initialize(){
       this.Orders = true;
       this.Bills = false;

@@ -1,10 +1,6 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="desserts"
-    sort-by="calories"
-    class="elevation-1"
-  >
+  
+  <v-data-table :headers="headers" :items="bills.data.factures" sort-by="bills" class="elevation-1">
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -16,48 +12,90 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="">{{ formTitle }}</span>
+              <span class="">New Bill</span>
             </v-card-title>
 
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
+                  <v-dialog
+                        ref="dialog"
+                        v-model="modal"
+                        :return-value.sync="date"
+                        persistent
+                        width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="bill.date"
+                            label="Insert Date"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            outlined
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="bill.date" scrollable>
+                          <v-spacer></v-spacer>
+                          <v-btn text color="primary" @click="modal = false">
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            text
+                            color="primary"
+                            @click="$refs.dialog.save(date)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-dialog>
                 </v-row>
+                <v-row>
+                  <v-select :items="vendors.data.fournisseurs" v-model="bill.fournisseur" label="fournisseur" outlined
+                    return-object item-text="name" item-value="_id"></v-select> 
+                  </v-row>
+                  <v-row>
+                    <v-select
+                        :items="prod.data.produits"
+                        v-model="bill.listeProduits"
+                        label="Choose Products"
+                        outlined
+                        multiple
+                        chips
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                      <v-container
+                        v-for="produit in bill.listeProduits"
+                        :key="produit"
+                      >
+                        <v-row>
+                          <v-col>
+                            <v-container>
+                              <p>Product: {{ produit.designation }}</p>
+                            </v-container>
+                          </v-col>
+                          <v-col>
+                            <v-text-field
+                              v-model="produit.quantite"
+                              type="number"
+                              label="Quantity"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                          <v-col>
+                            <v-text-field
+                              v-model="produit.prix"
+                              type="number"
+                              label="Price"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                  </v-row>
               </v-container>
             </v-card-text>
 
@@ -68,15 +106,110 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="dialogEdit" max-width="500px">
+          <v-card>
+            <v-card-title>
+              <span class="">Edit Bill</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-dialog
+                        ref="dialog"
+                        v-model="modal"
+                        :return-value.sync="date"
+                        persistent
+                        width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="bill.date"
+                            label="Insert Date"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            outlined
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker v-model="bill.date" scrollable>
+                          <v-spacer></v-spacer>
+                          <v-btn text color="primary" @click="modal = false">
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            text
+                            color="primary"
+                            @click="$refs.dialog.save(date)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-dialog>
+                </v-row>
+                <v-row>
+                  <v-select :items="vendors.data.fournisseurs" v-model="bill.fournisseur" label="fournisseur" outlined
+                    return-object item-text="name" item-value="_id"></v-select> 
+                  </v-row>
+                  <v-row>
+                    <v-select
+                        :items="prod.data.produits"
+                        v-model="bill.listeProduits"
+                        label="Choose Products"
+                        outlined
+                        multiple
+                        chips
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                      <v-container
+                        v-for="produit in bill.listeProduits"
+                        :key="produit"
+                      >
+                        <v-row>
+                          <v-col>
+                            <v-container>
+                              <p>Product: {{ produit.designation }}</p>
+                            </v-container>
+                          </v-col>
+                          <v-col>
+                            <v-text-field
+                              v-model="produit.quantite"
+                              type="number"
+                              label="Quantity"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                          <v-col>
+                            <v-text-field
+                              v-model="produit.prix"
+                              type="number"
+                              label="Price"
+                              outlined
+                            ></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-container>
+                  </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
+              <v-btn color="primary" @click="edit(selectedId)"> Save </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="align-center"
-              >Are you sure you want to delete this item?</v-card-title
-            >
+            <v-card-title class="align-center">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="primary " @click="deleteItemConfirm(selectedId)">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -84,8 +217,8 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+      <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
       <h3 class="secondary--text">No Products Yet?</h3>
@@ -97,35 +230,39 @@
 
 
 <script>
+import axios from 'axios';
 export default {
+  props:['totalBills'],
   data: () => ({
     dialog: false,
+    dialogEdit: false,
     dialogDelete: false,
+    selectedId: null,
+    modal: false,
     headers: [
       {
-        text: "Product",
+        text: "Vendor",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "fournisseur.name",
       },
-      { text: "Added The", value: "calories" },
-      { text: "Product Type", value: "fat" },
-      { text: "Tracking ID", value: "carbs" },
+      { text: "Added The", value: "date" },
+      { text: "Tracking id", value: "_id" },
+      { text: "Number Of Products", value: "nbr_products" },
+      { text: "Total", value: "total" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    desserts: [],
+    bills: [],
+    vendors: [],
+    prod: [],
     editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+    bill: {
+      id: 0,
+      date: null,
+      fournisseur: "",
+      listeProduits: [],
+      nbr_products: 0,
+      total:0,
     },
   }),
 
@@ -133,6 +270,10 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
+    totalBills() {
+      return this.bills.length;
+    },
+
   },
 
   watch: {
@@ -144,117 +285,103 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getBill();
+    this.getVendor();
+    this.getProduct();
+    console.log(this.bills)
+    console.log(this.bills.length);
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-        },
-      ];
+    emitTotalBills() {
+        this.$emit('totalBills', this.totalBills);
+    },
+    getBill() {
+      axios
+        .get("http://localhost:3000/api/v1/facture")
+        .then((response) => {
+          this.bills = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getVendor() {
+      axios.get('http://localhost:3000/api/v1/fournisseur')
+        .then((response) => {
+          this.vendors = response.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getProduct() {
+      axios.get('http://localhost:3000/api/v1/produit')
+        .then((response) => {
+          this.prod = response.data
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
 
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    InsertItem(item) {
       this.dialog = true;
     },
+      editItem(id){
+        this.dialogEdit = true;
+        this.selectedId = id;
+      },
+      edit(id){
+        axios.patch("http://localhost:3000/api/v1/facture/" + id, this.bill);
+        this.closeEdit();
+        this.product.designation = "";
+        this.getProduct();
+        this.$forceUpdate();
+      },
 
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    deleteItem(id) {
       this.dialogDelete = true;
+      this.selectedId = id;
     },
 
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+    deleteItemConfirm(id) {
+      axios.delete("http://localhost:3000/api/v1/facture/" + id);
       this.closeDelete();
+      this.getBill();
+      this.$forceUpdate();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+    },
+    closeEdit() {
+      this.dialogEdit = false;
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
+      axios
+        .post("http://localhost:3000/api/v1/facture/", this.bill)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
+      this.getBill();
+      this.$forceUpdate();
     },
   },
+  computed:{
+    total(){
+      return this.bill.listeProduits.reduce((total, item) => total + item.prix, 0)
+    },
+  }
 };
 </script>

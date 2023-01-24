@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema.Types;
 
 
-const produitEnStockSchema = new mongoose.Schema({
+let produitEnStockSchema = new mongoose.Schema({
     produit:{
         type: ObjectId,
         required: true,
@@ -23,6 +23,11 @@ const produitEnStockSchema = new mongoose.Schema({
     }
 })
 
-const ProduitEnStock = mongoose.model('ProduitEnStock', produitEnStockSchema);
+let produitEnStock;
 
-module.exports = ProduitEnStock;
+module.exports = () => {
+  if (!produitEnStock) {
+    produitEnStock = mongoose.model("ProduitEnStock", produitEnStockSchema);
+  }
+  return produitEnStock;
+}

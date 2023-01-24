@@ -10,6 +10,7 @@ router
 router
   .route('/:id')
   .get(factureController.getFacture)
+  .get(factureController.getFacturesByFournisseur)
   .patch(factureController.updateFacture)
   .delete(factureController.deleteFacture);
 

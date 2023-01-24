@@ -298,6 +298,7 @@ export default {
     this.getOrder();
     this.getVendor();
     this.getProduct();
+    console.log(this.orders)
   },
 
   methods: {
