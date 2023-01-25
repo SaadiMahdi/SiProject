@@ -1,7 +1,6 @@
 const Fournisseur = require('./../models/fournisseurModel');
 
 
-
 exports.getAllFournisseurs = async (req, res) => {
   try {
     const fournisseurs = await Fournisseur.find()
