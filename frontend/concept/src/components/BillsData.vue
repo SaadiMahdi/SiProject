@@ -29,6 +29,7 @@
                           <v-text-field
                             v-model="bill.date"
                             label="Insert Date"
+                            format="DD/MM/YYYY"
                             prepend-icon="mdi-calendar"
                             readonly
                             v-bind="attrs"

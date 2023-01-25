@@ -114,17 +114,6 @@ exports.createTransaction = async (req, res) => {
         throw new Error ("Quantite insuffisante");
       }
     });
-    // // get the sum of prixVente * quantite for each produit
-    // const prixTotal = listeProduits.reduce((acc, produit) => {
-    //   return acc + produit.quantite * produit.prixVente;
-    // }, 0);
-    // // get the client
-    // const clientT = req.body.client;
-    // const searchClient = await findById(clientT);
-    // // update the credit of the client
-    // searchClient.credit += prixTotal;
-    // await searchClient.save();
-
 
     res.status(201).json({
       status: "success",
