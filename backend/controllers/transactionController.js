@@ -1,5 +1,7 @@
+const { findById } = require("../models/fournisseurModel");
 const transaction = require("./../models/transactionModel");
 const ProduitEnStock = require("./../models/produitEnStockModel")();
+const Client = require("./../models/clientModel")();
 
 exports.getAllTransactions = async (req, res) => {
   try {
@@ -100,17 +102,29 @@ exports.getTransactionsByClient = async (req, res) => {
 exports.createTransaction = async (req, res) => {
   try {
     const newTransaction = await transaction.create(req.body);
-
+      
     const listeProduits = req.body.listeProduits;
     listeProduits.forEach(async (produit) => {
-      // Find the product in the produitEnStock collection
       const produitEnStock = await ProduitEnStock.findById(produit.produit);
       if (produitEnStock.quantite >= produit.quantite) {
-        // Update the quantity of the product in produitEnStock
         produitEnStock.quantite -= produit.quantite;
         await produitEnStock.save();
       }
+      else{
+        throw new Error ("Quantite insuffisante");
+      }
     });
+    // // get the sum of prixVente * quantite for each produit
+    // const prixTotal = listeProduits.reduce((acc, produit) => {
+    //   return acc + produit.quantite * produit.prixVente;
+    // }, 0);
+    // // get the client
+    // const clientT = req.body.client;
+    // const searchClient = await findById(clientT);
+    // // update the credit of the client
+    // searchClient.credit += prixTotal;
+    // await searchClient.save();
+
 
     res.status(201).json({
       status: "success",

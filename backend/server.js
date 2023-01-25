@@ -6,11 +6,6 @@ const app = require("./app");
 
 mongoose.set("strictQuery", true);
 
-// const DB = process.env.DATABASE.replace(
-//   "<PASSWORD>",
-//   process.env.DATABASE_PASSWORD
-// );
-
 mongoose
   .connect("mongodb://Mahdi:4iMfYsmX8ABmvwFf@ac-uxeijgl-shard-00-00.ofqyds8.mongodb.net:27017,ac-uxeijgl-shard-00-01.ofqyds8.mongodb.net:27017,ac-uxeijgl-shard-00-02.ofqyds8.mongodb.net:27017/?ssl=true&replicaSet=atlas-xn9iuv-shard-0&authSource=admin&retryWrites=true&w=majority")
   .then(() => console.log("DB connection successful!"))

@@ -4,7 +4,7 @@ const Client = require('./../models/clientModel');
 
 exports.getAllClients = async (req, res) => {
   try {
-    const client = await Client.find()
+    const client = await Client.find({})
 
     res.status(200).json({
       status: 'success',
