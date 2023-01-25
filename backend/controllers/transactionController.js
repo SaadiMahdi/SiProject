@@ -1,11 +1,12 @@
 const transaction = require("./../models/transactionModel");
+const ProduitEnStock = require("./../models/produitEnStockModel")();
 
 exports.getAllTransactions = async (req, res) => {
   try {
     const tr = await transaction
       .find({})
       .populate("client", "_id")
-      .populate("listeProduits.id", "_id");
+      .populate("listeProduits.produit", "_id");
 
     res.status(200).json({
       status: "success",
@@ -27,7 +28,7 @@ exports.getTransaction = async (req, res) => {
     const tr = await transaction
       .findById(req.params.id)
       .populate("client", "_id")
-      .populate("listeProduits.id", "_id");
+      .populate("listeProduits.produit", "_id");
 
     res.status(200).json({
       status: "success",
@@ -43,9 +44,73 @@ exports.getTransaction = async (req, res) => {
   }
 };
 
+exports.getTransactionsByClient = async (req, res) => {
+  try {
+    const tr = await transaction
+      .find({ client: req.params.id })
+      .populate("client", "_id")
+      .populate("listeProduits.produit", "_id");
+
+    res.status(200).json({
+      status: "success",
+      results: tr.length,
+      data: {
+        tr,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
+
+
+// exports.createTransaction = async (req, res) => {
+//   try {
+//     const newTransaction = await transaction.create(req.body);
+
+//     const listeProduits = req.body.listeProduits;
+
+//     const updatePromises = listeProduits.map(async (produit) => {
+//       return await ProduitEnStock.updateOne(
+//         { _id: produit.produit, quantite: { $gte: produit.quantite } },
+//         { $inc: { quantite: -produit.quantite } }
+//       );
+//     });
+
+//     await Promise.all(updatePromises);
+
+//     res.status(201).json({
+//       status: "success",
+//       data: {
+//         tr: newTransaction,
+//       },
+//     });
+//   } catch (err) {
+//     res.status(400).json({
+//       status: "fail",
+//       message: err,
+//     });
+//   }
+// };
+
 exports.createTransaction = async (req, res) => {
   try {
     const newTransaction = await transaction.create(req.body);
+
+    const listeProduits = req.body.listeProduits;
+    listeProduits.forEach(async (produit) => {
+      // Find the product in the produitEnStock collection
+      const produitEnStock = await ProduitEnStock.findById(produit.produit);
+      if (produitEnStock.quantite >= produit.quantite) {
+        // Update the quantity of the product in produitEnStock
+        produitEnStock.quantite -= produit.quantite;
+        await produitEnStock.save();
+      }
+    });
 
     res.status(201).json({
       status: "success",
@@ -60,6 +125,7 @@ exports.createTransaction = async (req, res) => {
     });
   }
 };
+
 
 exports.updateTransaction = async (req, res) => {
   try {

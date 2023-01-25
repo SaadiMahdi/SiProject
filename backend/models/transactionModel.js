@@ -3,22 +3,17 @@ const { ObjectId } = mongoose.Schema.Types;
 
 
 const transactionSchema = new mongoose.Schema({
-    date: Date,
-    listProduits:[
+    date: {
+        type: Date,
+        default: Date.now,
+    },
+    listeProduits:[
         {
-            id: { 
+            produit: { 
                     type: ObjectId,
-                    ref: "Produit"
+                    ref: "ProduitEnStock"
                 },
             quantite: {
-                type: Number,
-                required: true
-            },
-            prixHT:  {
-                type: Number,
-                required: true
-            },
-            prixVente:  {
                 type: Number,
                 required: true
             },

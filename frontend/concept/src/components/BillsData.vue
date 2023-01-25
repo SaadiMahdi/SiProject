@@ -232,7 +232,6 @@
 <script>
 import axios from 'axios';
 export default {
-  props:['totalBills'],
   data: () => ({
     dialog: false,
     dialogEdit: false,
@@ -270,10 +269,6 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    totalBills() {
-      return this.bills.length;
-    },
-
   },
 
   watch: {
@@ -294,9 +289,6 @@ export default {
   },
 
   methods: {
-    emitTotalBills() {
-        this.$emit('totalBills', this.totalBills);
-    },
     getBill() {
       axios
         .get("http://localhost:3000/api/v1/facture")
