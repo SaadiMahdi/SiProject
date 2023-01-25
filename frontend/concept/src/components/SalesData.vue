@@ -1,9 +1,12 @@
 <template>
-  <v-data-table
+<div>
+  <h2>Coming soon</h2>
+</div>
+  <!-- <v-data-table
     :headers="headers"
     :items="desserts"
     sort-by="calories"
-    class="elevation-1"
+
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -92,7 +95,7 @@
       <p>Add products to your store and start selling to see products here</p>
       <v-btn color="primary" @click="initialize"> Reset </v-btn>
     </template>
-  </v-data-table>
+  </v-data-table> -->
 </template>
 
 

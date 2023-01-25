@@ -1,6 +1,6 @@
 <template>
   
-  <v-data-table :headers="headers" :items="bills.data.factures" sort-by="bills" class="elevation-1">
+  <v-data-table :headers="headers" :items="bills.data.factures" sort-by="bills" >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -221,9 +221,9 @@
       <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
-      <h3 class="secondary--text">No Products Yet?</h3>
-      <p>Add products to your store and start selling to see products here</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <h3 class="secondary--text">No Bills Yet?</h3>
+      <p>Add your newest Bills here</p>
+      <v-btn color="primary" @click="InsertItem()"> Add Bill </v-btn>
     </template>
   </v-data-table>
 </template>

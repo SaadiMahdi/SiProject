@@ -16,16 +16,16 @@
         </ul>
       </div>
       <div class="grid-page">
-        <v-card class="info-main">
+        <v-card class="info-main rounded-lg" flat>
           <InfoCard :icon="ordersIcon" :elements="ordersInfo"></InfoCard>
         </v-card>
-        <v-card class="info2">
+        <v-card class="info2 rounded-lg" flat>
           <InfoCard :icon="cartIcon" :elements="cartInfo"></InfoCard>
         </v-card>
-        <div class="stats">
+        <div class="stats rounded-lg">
           <SalesData v-if="sales"/>
         </div>
-        <div class="stats">
+        <div class="stats rounded-lg">
           <PaymentData v-if="payments"/>
         </div>
       </div>

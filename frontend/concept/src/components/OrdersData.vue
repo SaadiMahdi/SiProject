@@ -4,7 +4,6 @@
       :headers="headers"
       :items="this.orders"
       sort-by="products"
-      class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar flat>

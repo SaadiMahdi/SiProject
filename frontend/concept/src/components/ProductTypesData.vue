@@ -4,7 +4,6 @@
       :headers="headers"
       :items="categories.data.categorie"
       sort-by="products"
-      class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar flat>

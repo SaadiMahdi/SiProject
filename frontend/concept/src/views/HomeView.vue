@@ -6,22 +6,22 @@
     <div class="main-content">
       <AppNavBar title="Dashboard" />
       <div class="grid-page">
-        <v-card  class="fifty-grid1">
+        <v-card  class="fifty-grid1 rounded-lg" flat>
           <InfoCard :icon="salesIcon" :elements="salesInfo"></InfoCard>
         </v-card>
-        <v-card  class="fifty-grid2">
+        <v-card  class="fifty-grid2 rounded-lg" flat>
           <InfoCard :icon="costumerIcon" :elements="costumersInfo"></InfoCard>
         </v-card>
-        <v-card class="stats1">
+        <v-card class="stats1 rounded-lg" flat>
           <h2>Stats</h2>
         </v-card>
-        <v-card class="endcard">
+        <v-card class="endcard rounded-lg" flat>
           <InfoCard :icon="baughtIcon" :elements="boughtInfo"></InfoCard>
         </v-card>
-        <v-card class="stats2">
+        <v-card class="stats2 rounded-lg" flat>
           <h2>Stats</h2>
         </v-card>
-        <v-card class="endcard">
+        <v-card class="endcard rounded-lg" flat>
           <InfoCard :icon="vendorIcon" :elements="vendorsInfo"></InfoCard>
         </v-card>
       </div>

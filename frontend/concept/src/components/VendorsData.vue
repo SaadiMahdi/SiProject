@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="vendors.data.fournisseurs" sort-by="vendors" class="elevation-1">
+  <v-data-table :headers="headers" :items="vendors.data.fournisseurs" sort-by="vendors" >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -11,7 +11,7 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="">{{ formTitle }}</span>
+              <span class="">Add Vendor</span>
             </v-card-title>
 
             <v-card-text>
@@ -96,7 +96,7 @@
     <template v-slot:no-data>
       <h3 class="secondary--text">No Vendors Yet?</h3>
       <p>Add Vendors to your database</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <v-btn color="primary" @click="InsertItem()"> Add Vendor </v-btn>
     </template>
   </v-data-table>
 </template>

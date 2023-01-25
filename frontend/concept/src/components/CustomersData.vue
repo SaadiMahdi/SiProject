@@ -3,7 +3,6 @@
     :headers="headers"
     :items="customers.data.client"
     sort-by="customers"
-    class="elevation-1"
   >
     <template v-slot:top>
       <v-toolbar flat>
@@ -16,7 +15,7 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="">{{ formTitle }}</span>
+              <span class="">Add Customer</span>
             </v-card-title>
 
             <v-card-text>
@@ -123,7 +122,7 @@
     <template v-slot:no-data>
       <h3 class="secondary--text">No Customers Yet?</h3>
       <p>That's sad, lonely store..</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <v-btn color="primary" @click="InsertItem()"> Add Customer </v-btn>
     </template>
   </v-data-table>
 </template>
