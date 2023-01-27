@@ -4,7 +4,8 @@ exports.getAllReglement = async (req, res) => {
   try {
     const reglements = await Reglement
       .find({})
-      .populate("facture", "_id fournisseur listeProduits.prix")
+      .populate("facture")
+      .populate("facture.fournisseur")
     res.status(200).json({
       status: "success",
       results: reglements.length,

@@ -5,7 +5,6 @@ const { ObjectId } = mongoose.Schema.Types;
 const factureSchema = new mongoose.Schema({
     date: {
         type: Date,
-        default: Date.now,
     },
     fournisseur: {
         type: ObjectId,

@@ -1,12 +1,5 @@
 <template>
-  <v-data-table
-    v-model="selectedRows"
-    :headers="headers"
-    :items="vendors.data.fournisseurs"
-    sort-by="vendors"
-    show-select
-    item-key="_id"
-  >
+  <v-data-table :headers="headers" :items="this.vendors" sort-by="vendors" >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -199,7 +192,10 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/fournisseur")
         .then((response) => {
-          this.vendors = response.data;
+          this.vendors = response.data.data.fournisseurs;
+        })
+        .catch(error => {
+          console.log(error)
         })
         .catch((error) => {
           console.log(error);

@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="customers.data.client"
+    :items="customers"
     sort-by="customers"
   >
     <template v-slot:top>
@@ -181,7 +181,7 @@ export default {
     getCustomer() {
       axios.get('http://localhost:3000/api/v1/client')
         .then((response) => {
-          this.customers = response.data
+          this.customers = response.data.data.client;
         })
         .catch(error => {
           console.log(error)
