@@ -40,7 +40,7 @@ app.use('/api/v1/facture', factureRouter);
 app.use('/api/v1/reglement', reglementRouter);
 app.use('/api/v1/transaction', transactionRouter);
 app.use('/api/v1/paiement', paiementRouter);
-app.use('/api/v1/bonLivraison', bonLivraisonRouter);
+app.use('/api/v1/bonLivraison', bonLivraisonRouter);  
 
 
 module.exports = app;

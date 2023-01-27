@@ -1,11 +1,24 @@
 <template>
-  <v-data-table :headers="headers" :items="vendors.data.fournisseurs" sort-by="vendors" >
+  <v-data-table
+    v-model="selectedRows"
+    :headers="headers"
+    :items="vendors.data.fournisseurs"
+    sort-by="vendors"
+    show-select
+    item-key="_id"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" @click="InsertItem()">
+          <template>
+            <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              @click="InsertItem()"
+            >
               New Vendor
             </v-btn>
           </template>
@@ -17,13 +30,25 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-text-field v-model="vendor.name" label="Vendor" outlined></v-text-field>
+                  <v-text-field
+                    v-model="vendor.name"
+                    label="Vendor"
+                    outlined
+                  ></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field v-model="vendor.address" label="Address" outlined></v-text-field>
+                  <v-text-field
+                    v-model="vendor.address"
+                    label="Address"
+                    outlined
+                  ></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field v-model="vendor.phone" label="Phone" outlined></v-text-field>
+                  <v-text-field
+                    v-model="vendor.phone"
+                    label="Phone"
+                    outlined
+                  ></v-text-field>
                 </v-row>
                 <!-- <v-row>
                   <v-text-field
@@ -48,27 +73,39 @@
               <span class="">Modify vendor</span>
             </v-card-title>
             <form action="" method="post">
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-text-field v-model="vendor.name" label="Vendor" outlined></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field v-model="vendor.address" label="Adress" outlined></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field v-model="vendor.phone" label="Phone" outlined></v-text-field>
-                </v-row>
-                <!-- <v-row>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-text-field
+                      v-model="vendor.name"
+                      label="Vendor"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                      v-model="vendor.address"
+                      label="Adress"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                      v-model="vendor.phone"
+                      label="Phone"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                  <!-- <v-row>
                   <v-text-field
                     v-model="vendor.orders"
                     label="Orders"
                     outlined
                   ></v-text-field>
                 </v-row> -->
-              </v-container>
-            </v-card-text>
-          </form>
+                </v-container>
+              </v-card-text>
+            </form>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
@@ -78,11 +115,15 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="align-center">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="align-center"
+              >Are you sure you want to delete this item?</v-card-title
+            >
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm(selectedId)">OK</v-btn>
+              <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                >OK</v-btn
+              >
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -90,7 +131,9 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)">
+        mdi-pencil
+      </v-icon>
       <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
@@ -121,6 +164,7 @@ export default {
       { text: "Orders", value: "orders" },
       { text: "Action", value: "actions", sortable: false },
     ],
+    selectedRows:[],
     vendors: [],
     selectedId: null,
     vendor: {
@@ -135,7 +179,6 @@ export default {
     formTitle() {
       return this.vendor === -1 ? "New Item" : "Edit Item";
     },
-
   },
 
   watch: {
@@ -153,13 +196,14 @@ export default {
 
   methods: {
     getVendor() {
-      axios.get('http://localhost:3000/api/v1/fournisseur')
+      axios
+        .get("http://localhost:3000/api/v1/fournisseur")
         .then((response) => {
-          this.vendors = response.data
+          this.vendors = response.data;
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     InsertItem(item) {
@@ -172,7 +216,10 @@ export default {
     },
 
     edit(id) {
-      axios.patch("http://localhost:3000/api/v1/fournisseur/" + id, this.vendor);
+      axios.patch(
+        "http://localhost:3000/api/v1/fournisseur/" + id,
+        this.vendor
+      );
       this.closeEdit();
       this.getVendor();
       this.$forceUpdate();
@@ -184,7 +231,7 @@ export default {
     },
 
     deleteItemConfirm(id) {
-      axios.delete('http://localhost:3000/api/v1/fournisseur/' + id);
+      axios.delete("http://localhost:3000/api/v1/fournisseur/" + id);
       this.closeDelete();
       this.getVendor();
       this.$forceUpdate();
@@ -202,13 +249,14 @@ export default {
     },
 
     save() {
-      axios.post('http://localhost:3000/api/v1/fournisseur', this.vendor)
+      axios
+        .post("http://localhost:3000/api/v1/fournisseur", this.vendor)
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
       this.getVendor();
       this.$forceUpdate();

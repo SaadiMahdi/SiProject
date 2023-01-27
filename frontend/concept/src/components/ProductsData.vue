@@ -1,14 +1,18 @@
 <template>
   <div>
     <v-data-table
+    v-model="selectedRows"
       :headers="headers"
       :items="this.prod"
       sort-by="products"
+      show-select
+      item-key = "_id"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
           <template>
+            <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>
             <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
               New Product
             </v-btn>
@@ -151,6 +155,7 @@ export default {
       { text: "Tracking ID", value: "_id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
+    selectedRows:[],
     prod: [],
     categories: [],
     selectedId: null,

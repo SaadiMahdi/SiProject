@@ -1,141 +1,174 @@
 <template>
-<div>
-  <h2>Coming soon</h2>
-</div>
-  <!-- <v-data-table
-    :headers="headers"
-    :items="desserts"
-    sort-by="calories"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              New Inventory Item
+  <div>
+    <v-data-table
+      v-model="selectedRows"
+      :headers="headers"
+      :items="this.stock"
+      sort-by="products"
+      show-select
+      item-key = "_id"
+    >
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-spacer></v-spacer>
+          <template>
+            <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>
+            <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
+              New Product
             </v-btn>
           </template>
-          <v-card>
-            <v-card-title>
-              <span class="">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                      outlined
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="close"> Cancel </v-btn>
-              <v-btn color="primary" @click="save"> Save </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="align-center"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions class="rounded-xl">
-              <v-spacer></v-spacer>
-              <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <h3 class="secondary--text">No Products Yet?</h3>
-      <p>Add products to your store and start selling to see products here</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
-    </template>
-  </v-data-table> -->
+          <v-dialog v-model="dialog" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="">Add product</span>
+              </v-card-title>
+              <form action="" method="post">
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-select
+                        :items="produits"
+                        v-model="productInStock.product"
+                        label="Product Name"
+                        outlined
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+              </form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="close"> Cancel </v-btn>
+                <v-btn color="primary" @click="save"> Save </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogEdit" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="">Modify product</span>
+              </v-card-title>
+              <form action="" method="post">
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-select
+                        :items="produits"
+                        v-model="productInStock.produit"
+                        label="Product Name"
+                        outlined
+                        return-object
+                        item-text="designation"
+                        item-value="_id"
+                      ></v-select>
+                    </v-row>
+                    <!-- <v-row>
+                  <v-text-field
+                    v-model="product.date"
+                    label="Added The"
+                    outlined
+                  ></v-text-field>
+                </v-row> -->
+                    <v-row>
+                      <v-text-field
+                        v-model="productInStock.prixVente"
+                        label="Sale Price"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                    <v-row>
+                      <v-text-field
+                        v-model="productInStock.prixAchat"
+                        label="Bought at"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                    <v-row>
+                      <v-text-field
+                        v-model="productInStock.quantite"
+                        label="Quanity"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+              </form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
+                <v-btn color="primary" @click="edit(selectedId)"> Save </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="align-center"
+                >Are you sure you want to delete this item?</v-card-title
+              >
+              <v-card-actions class="rounded-xl">
+                <v-spacer></v-spacer>
+                <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
+                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon small class="mr-2" @click="editItem(item._id)">
+          mdi-pencil
+        </v-icon>
+        <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
+      </template>
+      <template v-slot:no-data>
+        <h3 class="secondary--text">No Products Yet?</h3>
+        <p>Add products to your store and start selling to see products here</p>
+        <v-btn color="primary" @click="InsertItem()"> Add Product </v-btn>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 
 <script>
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
     dialogDelete: false,
+    dialogEdit: false,
+    selectedRows: [],
     headers: [
       {
         text: "Product",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "produit.designation",
       },
-      { text: "Added The", value: "calories" },
-      { text: "Product Type", value: "fat" },
-      { text: "Tracking ID", value: "carbs" },
+      { text: "Sale Price", value: "prixVente" },
+      { text: "Bought at", value: "prixAchat" },
+      { text: "Quantity", value: "quantite" },
+      { text: "Tracking ID", value: "_id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+    stock: [],
+    produits: [],
+    selectedId: null,
+    productInStock: {
+      produit: null,
+      prixVente: 0,
+      prixAchat: 0,
+      quantite: 0,
     },
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
-  },
+  computed: {},
 
   watch: {
     dialog(val) {
@@ -144,118 +177,88 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    dialogEdit(val) {
+      val || this.closeEdit();
+    },
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getStock();
+    this.getProduit();
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-        },
-      ];
+    getStock() {
+      axios
+        .get("http://localhost:3000/api/v1/produitEnStock")
+        .then((response) => {
+          console.log(response)
+          this.stock = response.data.data.produits;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+    getProduit() {
+      axios
+        .get("http://localhost:3000/api/v1/produit")
+        .then((response) => {
+          this.produits = response.data.data.produits;
+          console.log(response)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    InsertItem(item) {
       this.dialog = true;
     },
-
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
+    editItem(id) {
+      this.dialogEdit = true;
+      this.selectedId = id;
+    },
+    edit(id) {
+      axios.patch("http://localhost:3000/api/v1/produitEnStock/" + id, this.productInStock);
+      this.closeEdit();
+      this.getStock();
+      this.$forceUpdate();
     },
 
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+    deleteItem(id) {
+      this.dialogDelete = true;
+      this.selectedId = id;
+    },
+    deleteItemConfirm(id) {
+      console.log(id);
+      axios.delete("http://localhost:3000/api/v1/produitEnStock/" + id);
       this.closeDelete();
+      this.getStock();
+      this.$forceUpdate();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+    },
+    closeEdit() {
+      this.dialogEdit = false;
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
+      axios
+        .post("http://localhost:3000/api/v1/produitEnStock/", this.productInStock)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
+      this.getStock();
+      this.$forceUpdate();
     },
   },
 };
