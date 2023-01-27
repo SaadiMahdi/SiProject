@@ -1,12 +1,5 @@
 <template>
-<div>
-  <h2>Coming Soon</h2>
-</div>
-  <!-- <v-data-table
-    :headers="headers"
-    :items="desserts"
-    sort-by="calories"
-  >
+  <v-data-table :headers="headers" :items="this.settlments">
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -18,46 +11,25 @@
           </template>
           <v-card>
             <v-card-title>
-              <span class="">{{ formTitle }}</span>
+              <span class="">Add Settlment</span>
             </v-card-title>
-
             <v-card-text>
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                      outlined
-                    ></v-text-field>
+                    <v-text-field v-model="settlment.name" label="Dessert name" outlined></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                      outlined
-                    ></v-text-field>
+                    <v-text-field v-model="settlment.calories" label="Calories" outlined></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                      outlined
-                    ></v-text-field>
+                    <v-text-field v-model="settlment.fat" label="Fat (g)" outlined></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                      outlined
-                    ></v-text-field>
+                    <v-text-field v-model="settlment.carbs" label="Carbs (g)" outlined></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.protein"
-                      label="Protein (g)"
-                      outlined
-                    ></v-text-field>
+                    <v-text-field v-model="settlment.protein" label="Protein (g)" outlined></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -72,9 +44,7 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="align-center"
-              >Are you sure you want to delete this item?</v-card-title
-            >
+            <v-card-title class="align-center">Are you sure you want to delete this item?</v-card-title>
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
@@ -92,50 +62,58 @@
     <template v-slot:no-data>
       <h3 class="secondary--text">No Products Yet?</h3>
       <p>Add products to your store and start selling to see products here</p>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
+      <v-btn color="primary" dark class="mb-2">
+        New settlement
+      </v-btn>
     </template>
-  </v-data-table> -->
+  </v-data-table>
 </template>
 
 
 <script>
+import axios from "axios";
 export default {
-    name: "SettlementData",
+  name: "SettlementData",
   data: () => ({
     dialog: false,
     dialogDelete: false,
     headers: [
       {
-        text: "Product",
+        text: "Vendor",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "facture.fournisseur",
       },
-      { text: "Added The", value: "calories" },
-      { text: "Product Type", value: "fat" },
-      { text: "Tracking ID", value: "carbs" },
+      { text: "Added The", value: "date" },
+      { text: "Settlment ID", value: "_id" },
+      { text: "Amount", value: "total" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    desserts: [],
+    settlments: [],
+    bills: [],
+    vendors: [],
     editedIndex: -1,
-    editedItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-    },
-    defaultItem: {
-      name: "",
-      calories: 0,
-      fat: 0,
-      carbs: 0,
+    settlment: {
+      id: "",
+      date: "",
+      facture:{
+        fournisseur: "",
+        prixAchat: 0,
+        quantite: 0,
+      },
+
     },
   }),
 
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
+    //calcul du montant total de la facture
+    total() {
+      return this.settlments.reduce((total, settlment) => {
+        return total + settlment.facture.reduce((subTotal, bill) => {
+          return subTotal + bill.prixAchat;
+        }, 0);
+      }, 0);
+    },  
   },
 
   watch: {
@@ -147,85 +125,54 @@ export default {
     },
   },
 
-  created() {
-    this.initialize();
+  mounted() {
+    this.getSettlment();
+    this.getBill();
+    this.getVendor();
+    console.log(this.total)
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-        },
-      ];
+    getSettlment() {
+      axios
+        .get("http://localhost:3000/api/v1/reglement")
+        .then((response) => {
+          this.settlments = response.data.data.reglements;
+          console.log(this.settlments)
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getBill() {
+      axios
+        .get("http://localhost:3000/api/v1/facture")
+        .then((response) => {
+          this.bills = response.data.data.factures;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getVendor() {
+      axios.get('http://localhost:3000/api/v1/fournisseur')
+        .then((response) => {
+          this.vendors = response.data.data.fournisseurs;
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
 
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.settlment = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
       this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.settlment = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
@@ -237,7 +184,7 @@ export default {
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.settlment = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
     },
@@ -245,16 +192,16 @@ export default {
     closeDelete() {
       this.dialogDelete = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.settlment = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
     },
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+        Object.assign(this.desserts[this.editedIndex], this.settlment);
       } else {
-        this.desserts.push(this.editedItem);
+        this.desserts.push(this.settlment);
       }
       this.close();
     },

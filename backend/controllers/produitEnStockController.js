@@ -96,3 +96,19 @@ exports.deleteProduitEnStock = async (req, res) => {
     });
   }
 };
+
+exports.deleteProduitsEnStock = async (req, res) => {
+  try {
+    await ProduitEnStock.deleteMany({ _id: { $in: req.body.ids } });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+}

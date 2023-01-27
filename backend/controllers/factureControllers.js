@@ -1,6 +1,20 @@
 const Facture = require("./../models/factureModel");
 const ProduitEnStock = require("./../models/produitEnStockModel")();
 
+
+exports.calculateTotal = async (req, res) => {
+  try {
+      const facture = await Facture.findById(req.params.id);
+      let total = 0;
+      facture.listeProduits.forEach((item) => {
+          total += item.prixAchat * item.quantite;
+      });
+      res.send({ total });
+  } catch (error) {
+      res.status(500).send(error);
+  }
+};
+
 exports.getAllFactures = async (req, res) => {
   try {
     const factures = await Facture
@@ -89,14 +103,14 @@ exports.createFacture = async (req, res) => {
     const listeProduits = newFacture.listeProduits;
     listeProduits.forEach(async (produit) => {
       const produitEnStock = await ProduitEnStock.findOne({
-        produit: produit.produit,
+        produit: produit._id,
       });
       if (produitEnStock) {
         produitEnStock.quantite += produit.quantite;
         await produitEnStock.save();
       } else {
         const newProduitEnStock = await ProduitEnStock.create({
-          produit: produit.produit,
+          produit: produit._id,
           quantite: produit.quantite,
           prixVente: produit.prixVente,
           prixAchat: produit.prixAchat,
@@ -107,7 +121,7 @@ exports.createFacture = async (req, res) => {
     res.status(201).json({
       status: "success",
       data: {
-        bon: newFacture,
+        facture: newFacture,
       },
     });
   } catch (err) {

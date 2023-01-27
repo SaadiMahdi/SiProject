@@ -1,4 +1,5 @@
 const Produit = require('./../models/ProduitModel');
+const mongoose = require('mongoose');
 
 exports.getAllProduits = async (req, res) => {
   try {
@@ -115,4 +116,22 @@ exports.deleteProduit = async (req, res) => {
   }
 };
 
+// delete multiple produits by passing an array of ids
 
+exports.deleteProduits = async (req, res) => {
+  try {
+    const productIds = req.body.productIds.map(id => mongoose.Types.ObjectId(id));
+
+    await Produit.deleteMany({ _id: { $in: productIds } });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+}

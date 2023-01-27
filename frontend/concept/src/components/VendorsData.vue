@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="vendors.data.fournisseurs" sort-by="vendors" >
+  <v-data-table :headers="headers" :items="this.vendors" sort-by="vendors" >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
@@ -155,7 +155,7 @@ export default {
     getVendor() {
       axios.get('http://localhost:3000/api/v1/fournisseur')
         .then((response) => {
-          this.vendors = response.data
+          this.vendors = response.data.data.fournisseurs;
         })
         .catch(error => {
           console.log(error)

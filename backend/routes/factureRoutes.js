@@ -14,4 +14,8 @@ router
   .patch(factureController.updateFacture)
   .delete(factureController.deleteFacture);
 
+router
+  .route('/factureTotal/:id')
+  .get(factureController.calculateTotal);
+
 module.exports = router;

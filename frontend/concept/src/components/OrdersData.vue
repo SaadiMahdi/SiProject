@@ -297,7 +297,7 @@ export default {
     this.getOrder();
     this.getVendor();
     this.getProduct();
-    console.log(this.orders)
+    // console.log(this.orders)
   },
 
   methods: {
@@ -306,7 +306,7 @@ export default {
         .get("http://localhost:3000/api/v1/bonCommande")
         .then((response) => {
           this.orders = response.data.data.bons;
-          console.log(response.data);
+          // console.log(response.data);
         })
         .catch((error) => {
           console.log(error);

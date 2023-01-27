@@ -2,14 +2,14 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="categories.data.categorie"
+      :items="this.categories"
       sort-by="products"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
           <template>
-            <v-btn color="primary" dark class="mb-2" @click="editItem()">
+            <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
               New Category
             </v-btn>
           </template>
@@ -52,6 +52,31 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="dialogEdit" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="">Edit Category</span>
+              </v-card-title>
+              <form action="" method="post">
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-text-field
+                        v-model="category.designation"
+                        label="Category"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+              </form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
+                <v-btn color="primary" @click="edit(selectedId)"> Save </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="align-center"
@@ -70,13 +95,15 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data>
         <h3 class="secondary--text">No Products Yet?</h3>
         <p>Add products to your store and start selling to see products here</p>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
+              New Category
+            </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -88,6 +115,7 @@ import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
+    dialogEdit: false,
     dialogDelete: false,
     headers: [
       {
@@ -135,19 +163,29 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/categorie")
         .then((response) => {
-          this.categories = response.data;
+          this.categories = response.data.data.categorie;
+          console.log(this.categories);
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    editItem(item) {
+    InsertItem(item) {
       this.dialog = true;
+    },
+    editItem(item) {
+      this.dialogEdit = true;
     },
 
     deleteItem(id) {
       this.dialogDelete = true;
       this.selectedId = id;
+    },
+    edit(id) {
+      axios.patch("http://localhost:3000/api/v1/categorie/" + id, this.category);
+      this.closeEdit();
+      this.getCategory();
+      this.$forceUpdate();
     },
 
     deleteItemConfirm(id) {
@@ -164,6 +202,13 @@ export default {
 
     closeDelete() {
       this.dialogDelete = false;
+    },
+    editItem(id) {
+      this.dialogEdit = true;
+      this.selectedId = id;
+    },
+    closeEdit() {
+      this.dialogEdit = false;
     },
 
     save() {

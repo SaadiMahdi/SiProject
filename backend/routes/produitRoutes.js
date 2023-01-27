@@ -12,5 +12,8 @@ router
   .get(produitController.getProduit)
   .patch(produitController.updateProduit)
   .delete(produitController.deleteProduit);
+router
+  .route('/deleteMany')
+  .post(produitController.deleteProduits);
 
 module.exports = router;
