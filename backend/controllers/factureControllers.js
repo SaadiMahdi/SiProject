@@ -152,6 +152,7 @@ exports.createFacture = async (req, res) => {
     listeProduits.forEach(async (produit) => {
       const produitEnStock = await ProduitEnStock.findOne({
         produit: produit._id,
+        prixAchat: produit.prixAchat,
       });
       if (produitEnStock) {
         produitEnStock.quantite += produit.quantite;
