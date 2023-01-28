@@ -6,13 +6,21 @@
       :items="this.stock"
       sort-by="products"
       show-select
-      item-key = "_id"
+      item-key="_id"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
           <template>
-            <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>
+            <v-btn
+              v-if="selectedRows.length != 0"
+              color="secondary"
+              dark
+              class="mb-2"
+              @click="deleteItem(selectedRows)"
+            >
+              Delete
+            </v-btn>
             <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
               New Product
             </v-btn>
@@ -28,13 +36,35 @@
                     <v-row>
                       <v-select
                         :items="produits"
-                        v-model="productInStock.product"
+                        v-model="productInStock.produit"
                         label="Product Name"
                         outlined
                         return-object
                         item-text="designation"
                         item-value="_id"
                       ></v-select>
+                    </v-row>
+                    <v-row>
+                      <v-text-field
+                        v-model="productInStock.prixVente"
+                        label="Sale Price"
+                        outlined
+                      ></v-text-field>
+                    </v-row>
+                    <v-row>
+                      <v-text-field
+                        v-model="productInStock.prixAchat"
+                        label="Bought at"
+                        outlined
+                        disabled
+                      ></v-text-field>
+                    </v-row>
+                    <v-row>
+                      <v-text-field
+                        v-model="productInStock.quantite"
+                        label="Quanity"
+                        outlined
+                      ></v-text-field>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -111,7 +141,12 @@
               <v-card-actions class="rounded-xl">
                 <v-spacer></v-spacer>
                 <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                <v-btn
+                  color="primary "
+                  @click="
+                    deleteItemConfirm(selectedId);
+                    deleteMany(selectedRows);
+                  "
                   >OK</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -192,7 +227,7 @@ export default {
       axios
         .get("http://localhost:3000/api/v1/produitEnStock")
         .then((response) => {
-          console.log(response)
+          console.log(response);
           this.stock = response.data.data.produits;
         })
         .catch((error) => {
@@ -204,7 +239,7 @@ export default {
         .get("http://localhost:3000/api/v1/produit")
         .then((response) => {
           this.produits = response.data.data.produits;
-          console.log(response)
+          console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -218,7 +253,10 @@ export default {
       this.selectedId = id;
     },
     edit(id) {
-      axios.patch("http://localhost:3000/api/v1/produitEnStock/" + id, this.productInStock);
+      axios.patch(
+        "http://localhost:3000/api/v1/produitEnStock/" + id,
+        this.productInStock
+      );
       this.closeEdit();
       this.getStock();
       this.$forceUpdate();
@@ -229,8 +267,18 @@ export default {
       this.selectedId = id;
     },
     deleteItemConfirm(id) {
-      console.log(id);
-      axios.delete("http://localhost:3000/api/v1/produitEnStock/" + id);
+      if (this.selectedRows.length == 0) {
+        console.log(id);
+        axios.delete("http://localhost:3000/api/v1/produitEnStock/" + id);
+        this.closeDelete();
+        this.getStock();
+        this.$forceUpdate();
+      }
+    },
+    deleteMany(selectedRows) {
+      const ids= selectedRows.map((row) => row._id);
+      console.log(ids)
+      axios.post("http://localhost:3000/api/v1/produitEnStock/deleteMany", ids);
       this.closeDelete();
       this.getStock();
       this.$forceUpdate();
@@ -248,8 +296,12 @@ export default {
     },
 
     save() {
+      console.log(this.productInStock);
       axios
-        .post("http://localhost:3000/api/v1/produitEnStock/", this.productInStock)
+        .post(
+          "http://localhost:3000/api/v1/produitEnStock/",
+          this.productInStock
+        )
         .then((response) => {
           console.log(response.data);
         })

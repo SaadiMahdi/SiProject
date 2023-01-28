@@ -13,7 +13,7 @@ const factureSchema = new mongoose.Schema({
     },
     listeProduits: [
         {
-            produit: { type: ObjectId, ref: "Produit" },
+            produit: { type: ObjectId, ref: "Produit"},
             prixAchat: {
                 type: Number,
                 required: true,

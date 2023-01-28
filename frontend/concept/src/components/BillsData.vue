@@ -18,50 +18,69 @@
               <v-container>
                 <v-row>
                   <v-dialog
-                        ref="dialog"
-                        v-model="modal"
-                        persistent
-                        width="290px"
+                    ref="dialog"
+                    v-model="modal"
+                    persistent
+                    width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="bill.date"
+                        format="dd/MM/yyyy"
+                        label="Insert Date"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        outlined
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="bill.date"
+                      scrollable
+                      format="dd/MM/yyyy"
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="modal = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.dialog.save(bill.date)"
                       >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="bill.date"
-                            format="dd/MM/yyyy"
-                            label="Insert Date"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            outlined
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="bill.date"
-                          scrollable
-                          format="dd/MM/yyyy"
-                        >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="modal = false">
-                            Cancel
-                          </v-btn>
-                          <v-btn
-                            text
-                            color="primary"
-                            @click="$refs.dialog.save(bill.date)"
-                          >
-                            OK
-                          </v-btn>
-                        </v-date-picker>
-                      </v-dialog>
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-dialog>
                 </v-row>
                 <v-row>
-                  <v-select :items="vendors" v-model="bill.fournisseur" label="fournisseur" outlined
-                    return-object item-text="name" item-value="_id"></v-select>
+                  <v-select
+                    :items="vendors"
+                    v-model="bill.fournisseur"
+                    label="fournisseur"
+                    outlined
+                    return-object
+                    item-text="name"
+                    item-value="_id"
+                  ></v-select>
                 </v-row>
                 <v-row>
-                  <v-select :items="prod" v-model="bill.listeProduits" label="Choose Products" outlined multiple chips
-                    return-object item-text="designation" item-value="_id"></v-select>
-                  <v-container v-for="produit in bill.listeProduits" :key="produit._id">
+                  <v-select
+                    :items="prod"
+                    v-model="bill.listeProduits"
+                    label="Choose Products"
+                    outlined
+                    multiple
+                    chips
+                    return-object
+                    item-text="designation"
+                    item-value="_id"
+                  ></v-select>
+                  <v-container
+                    v-for="produit in bill.listeProduits"
+                    :key="produit._id"
+                  >
                     <v-row>
                       <v-col>
                         <v-container>
@@ -69,15 +88,28 @@
                         </v-container>
                       </v-col>
                       <v-col>
-                        <v-text-field v-model="produit.quantite" type="number" label="Quantity" outlined></v-text-field>
+                        <v-text-field
+                          v-model="produit.quantite"
+                          type="number"
+                          label="Quantity"
+                          outlined
+                        ></v-text-field>
                       </v-col>
                       <v-col>
-                        <v-text-field v-model="produit.prixAchat" type="number" label="Purchase Price"
-                          outlined></v-text-field>
+                        <v-text-field
+                          v-model="produit.prixAchat"
+                          type="number"
+                          label="Purchase Price"
+                          outlined
+                        ></v-text-field>
                       </v-col>
                       <v-col>
-                        <v-text-field v-model="produit.prixVente" type="number" label="Selling Price"
-                          outlined></v-text-field>
+                        <v-text-field
+                          v-model="produit.prixVente"
+                          type="number"
+                          label="Selling Price"
+                          outlined
+                        ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -101,50 +133,69 @@
               <v-container>
                 <v-row>
                   <v-dialog
-                        ref="dialog"
-                        v-model="modal"
-                        persistent
-                        width="290px"
+                    ref="dialog"
+                    v-model="modal"
+                    persistent
+                    width="290px"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-text-field
+                        v-model="bill.date"
+                        format="dd/MM/yyyy"
+                        label="Insert Date"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                        outlined
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+                      v-model="bill.date"
+                      scrollable
+                      format="dd/MM/yyyy"
+                    >
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="modal = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.dialog.save(bill.date)"
                       >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                            v-model="bill.date"
-                            format="dd/MM/yyyy"
-                            label="Insert Date"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            outlined
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="bill.date"
-                          scrollable
-                          format="dd/MM/yyyy"
-                        >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="modal = false">
-                            Cancel
-                          </v-btn>
-                          <v-btn
-                            text
-                            color="primary"
-                            @click="$refs.dialog.save(bill.date)"
-                          >
-                            OK
-                          </v-btn>
-                        </v-date-picker>
-                      </v-dialog>
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-dialog>
                 </v-row>
                 <v-row>
-                  <v-select :items="vendors" v-model="bill.fournisseur" label="fournisseur" outlined
-                    return-object item-text="name" item-value="_id"></v-select>
+                  <v-select
+                    :items="vendors"
+                    v-model="bill.fournisseur"
+                    label="fournisseur"
+                    outlined
+                    return-object
+                    item-text="name"
+                    item-value="_id"
+                  ></v-select>
                 </v-row>
                 <v-row>
-                  <v-select :items="prod" v-model="bill.listeProduits" label="Choose Products" outlined
-                    multiple chips return-object item-text="designation" item-value="_id"></v-select>
-                  <v-container v-for="produit in bill.listeProduits" :key="produit._id">
+                  <v-select
+                    :items="prod"
+                    v-model="bill.listeProduits"
+                    label="Choose Products"
+                    outlined
+                    multiple
+                    chips
+                    return-object
+                    item-text="designation"
+                    item-value="_id"
+                  ></v-select>
+                  <v-container
+                    v-for="produit in bill.listeProduits"
+                    :key="produit._id"
+                  >
                     <v-row>
                       <v-col>
                         <v-container>
@@ -152,10 +203,20 @@
                         </v-container>
                       </v-col>
                       <v-col>
-                        <v-text-field v-model="produit.quantite" type="number" label="Quantity" outlined></v-text-field>
+                        <v-text-field
+                          v-model="produit.quantite"
+                          type="number"
+                          label="Quantity"
+                          outlined
+                        ></v-text-field>
                       </v-col>
                       <v-col>
-                        <v-text-field v-model="produit.prix" type="number" label="Price" outlined></v-text-field>
+                        <v-text-field
+                          v-model="produit.prix"
+                          type="number"
+                          label="Price"
+                          outlined
+                        ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -172,11 +233,15 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="align-center">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="align-center"
+              >Are you sure you want to delete this item?</v-card-title
+            >
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm(selectedId)">OK</v-btn>
+              <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                >OK</v-btn
+              >
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -184,7 +249,9 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)">
+        mdi-pencil
+      </v-icon>
       <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
@@ -197,7 +264,7 @@
 
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
@@ -227,8 +294,14 @@ export default {
       id: 0,
       date: "",
       fournisseur: "",
-      listeProduits: [],
-  
+      listeProduits: [
+        // {
+        //   produit: null,
+        //   quantite: 0,
+        //   prixAchat:0,
+        //   prixVente:0,
+        // }
+      ],
     },
   }),
 
@@ -249,15 +322,15 @@ export default {
   },
 
   created() {
-    this.bills.forEach(bill => {
-    this.getTotal(bill._id);
-    console.log(this.getTotal(bill._id));
-  });
+    this.bills.forEach((bill) => {
+      this.getTotal(bill._id);
+      console.log(this.getTotal(bill._id));
+    });
   },
 
   methods: {
     mmm() {
-      this.bills.forEach(bill => {
+      this.bills.forEach((bill) => {
         this.getTotal(bill._id);
         console.log(this.getTotal(bill._id));
       });
@@ -273,32 +346,36 @@ export default {
         });
     },
     getVendor() {
-      axios.get('http://localhost:3000/api/v1/fournisseur')
+      axios
+        .get("http://localhost:3000/api/v1/fournisseur")
         .then((response) => {
           this.vendors = response.data.data.fournisseurs;
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getProduct() {
-      axios.get('http://localhost:3000/api/v1/produit')
+      axios
+        .get("http://localhost:3000/api/v1/produit")
         .then((response) => {
           this.prod = response.data.data.produits;
+          console.log(this.prod);
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     getTotal(id) {
-      axios.get('http://localhost:3000/api/v1/facture/factureTotal/' + id)
+      axios
+        .get("http://localhost:3000/api/v1/facture/factureTotal/" + id)
         .then((response) => {
           this.bill.totalAmount = response.data.total;
         })
-        .catch(error => {
-          console.log(error)
-        })
-        },
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
     InsertItem(item) {
       this.dialog = true;
@@ -339,6 +416,7 @@ export default {
     },
 
     save() {
+      console.log(this.bill);
       axios
         .post("http://localhost:3000/api/v1/facture/", this.bill)
         .then((response) => {
