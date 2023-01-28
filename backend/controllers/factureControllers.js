@@ -19,9 +19,14 @@ exports.getAllFactures = async (req, res) => {
   try {
     const factures = await Facture
       .find({})
-      .populate("fournisseur", "_id name")
-      .populate("listeProduits.produit", "_id designation");
-
+      .populate("fournisseur", "_id name ")
+      .populate({
+        path: "listeProduits",
+        populate: {
+          path: "produit",
+          select: "_id designation",
+        },
+      })
     res.status(200).json({
       status: "success",
       results: factures.length,
@@ -41,8 +46,17 @@ exports.getFacture = async (req, res) => {
   try {
     const facture = await Facture
       .findById(req.params.id)
-      .populate("fournisseur", "_id name")
-      .populate("listProduits.produit", "_id designation");
+      .populate("fournisseur", "_id name phone")
+      .populate({
+        path: "listeProduits",
+        populate: {
+          path: "produit",
+          select: "_id designation",
+        },
+      })
+
+      console.log(facture.listeProduits.produit);
+
 
     res.status(200).json({
       status: "success",
@@ -97,20 +111,54 @@ exports.getFacturesByFournisseur = async (req, res) => {
 //   }
 // };
 
+// exports.createFacture = async (req, res) => {
+//   try {
+//     const newFacture = await Facture.create(req.body);
+//     const listeProduits = newFacture.listeProduits;
+//     listeProduits.forEach(async (produit) => {
+//       const produitEnStock = await ProduitEnStock.findOne({
+//         produit: produit._id,
+//       });
+//       if (produitEnStock) {
+//         produitEnStock.quantite += produit.quantite;
+//         await produitEnStock.save();
+//       } else {
+//         const newProduitEnStock = await ProduitEnStock.create({
+//           produit: produit,
+//           quantite: produit.quantite,
+//           prixVente: produit.prixVente,
+//           prixAchat: produit.prixAchat,
+//         });
+//         newProduitEnStock.save();
+//       }
+//     });
+//     res.status(201).json({
+//       status: "success",
+//       data: {
+//         facture: newFacture,
+//       },
+//     });
+//   } catch (err) {
+//     res.status(400).json({
+//       status: "fail",
+//       message: err,
+//     });
+//   }
+// };
 exports.createFacture = async (req, res) => {
   try {
     const newFacture = await Facture.create(req.body);
     const listeProduits = newFacture.listeProduits;
     listeProduits.forEach(async (produit) => {
       const produitEnStock = await ProduitEnStock.findOne({
-        produit: produit._id,
+        produit: produit.produit._id,
       });
       if (produitEnStock) {
         produitEnStock.quantite += produit.quantite;
         await produitEnStock.save();
       } else {
         const newProduitEnStock = await ProduitEnStock.create({
-          produit: produit._id,
+          produit: produit.produit._id,
           quantite: produit.quantite,
           prixVente: produit.prixVente,
           prixAchat: produit.prixAchat,
