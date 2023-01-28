@@ -4,7 +4,7 @@ const { ObjectId } = mongoose.Schema.Types;
 const bcSchema = new mongoose.Schema({
   listeProduits: [
     {
-      produit: { type: ObjectId, ref: "Produit" },
+      produit: { type: ObjectId, ref: "Produit", required: false },
       quantite: {
         type: Number,
         required: false,

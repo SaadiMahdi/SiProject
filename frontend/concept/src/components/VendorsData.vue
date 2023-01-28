@@ -3,6 +3,7 @@
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
+        <v-btn color="primary" @click="InsertItem()"> Add Vendor </v-btn>
         <v-dialog v-model="dialog" max-width="500px">
           <template>
             <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>

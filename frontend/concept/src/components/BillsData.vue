@@ -416,7 +416,7 @@ export default {
     },
 
     save() {
-      console.log(this.bill);
+      console.log(this.bill)
       axios
         .post("http://localhost:3000/api/v1/facture/", this.bill)
         .then((response) => {
@@ -426,6 +426,183 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        });
+      this.close();
+      this.getBill();
+      this.$forceUpdate();
+    },
+  },
+};
+</script>
+
+<script>
+import axios from 'axios';
+export default {
+  data: () => ({
+    dialog: false,
+    dialogEdit: false,
+    dialogDelete: false,
+    selectedId: null,
+    dialogDetails: false,
+    modal: false,
+    headers: [
+      {
+        text: "Vendor",
+        align: "start",
+        sortable: false,
+        value: "fournisseur.name",
+      },
+      { text: "Added The", value: "date", type: "date", sortable: true },
+      { text: "Tracking id", value: "_id" },
+      { text: "Number Of Products", value: "listeProduits.length" },
+      { text: "Total Amount", value: "totalAmount" },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
+    totalAmount: 0,
+    bills: [],
+    vendors: [],
+    prod: [{
+      designation: "",
+      _id: "",
+    }],
+    editedIndex: -1,
+    bill: {
+      id: 0,
+      date: "",
+      fournisseur: "",
+      listeProduits: [
+      ],
+
+    },
+  }),
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
+  },
+
+  mounted() {
+    this.getBill();
+    this.getVendor();
+    this.getProduct();
+    // this.mmm();
+  },
+
+  created() {
+    this.bills.forEach(bill => {
+      this.getTotal(bill._id);
+      console.log(this.getTotal(bill._id));
+    });
+  },
+
+  methods: {
+    // mmm() {
+    //   this.bills.forEach(bill => {
+    //     this.getTotal(bill._id);
+    //     console.log(this.getTotal(bill._id));
+    //   });
+    // },
+    getBill() {
+      axios
+        .get("http://localhost:3000/api/v1/facture")
+        .then((response) => {
+          this.bills = response.data.data.factures;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getVendor() {
+      axios.get('http://localhost:3000/api/v1/fournisseur')
+        .then((response) => {
+          this.vendors = response.data.data.fournisseurs;
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getProduct() {
+      axios.get('http://localhost:3000/api/v1/produit')
+        .then((response) => {
+          this.prod = response.data.data.produits;
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    getTotal(id) {
+      axios.get('http://localhost:3000/api/v1/facture/factureTotal/' + id)
+        .then((response) => {
+          this.bill.totalAmount = response.data.total;
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+
+    showDetails(id) {
+      this.dialogDetails = true;
+      this.selectedId = id;
+      axios.get('http://localhost:3000/api/v1/facture/' + id)
+        .then((response) => {
+          this.bill = response.data.data.facture;
+          console.log(this.bill)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    closeDetails() {
+      this.dialogDetails = false;
+    },
+
+    InsertItem(item) {
+      this.dialog = true;
+    },
+    editItem(id) {
+      this.dialogEdit = true;
+      this.selectedId = id;
+    },
+    edit(id) {
+      axios.patch("http://localhost:3000/api/v1/facture/" + id, this.bill);
+      this.closeEdit();
+      this.product.designation = "";
+      this.getProduct();
+      this.$forceUpdate();
+    },
+    deleteItem(id) {
+      this.dialogDelete = true;
+      this.selectedId = id;
+    },
+    deleteItemConfirm(id) {
+      axios.delete("http://localhost:3000/api/v1/facture/" + id);
+      this.closeDelete();
+      this.getBill();
+      this.$forceUpdate();
+    },
+    close() {
+      this.dialog = false;
+    },
+    closeDelete() {
+      this.dialogDelete = false;
+    },
+    closeEdit() {
+      this.dialogEdit = false;
+    },
+    save() {
+      axios
+        .post("http://localhost:3000/api/v1/facture/", this.bill)
+        .then((response) => {
+          console.log(response.data);
+          this.getBill();
+          this.$forceUpdate();
+        })
+        .catch((error) => {
+          console.log(error.response);
         });
       this.close();
       this.getBill();
