@@ -151,14 +151,14 @@ exports.createFacture = async (req, res) => {
     const listeProduits = newFacture.listeProduits;
     listeProduits.forEach(async (produit) => {
       const produitEnStock = await ProduitEnStock.findOne({
-        produit: produit.produit._id,
+        produit: produit._id,
       });
       if (produitEnStock) {
         produitEnStock.quantite += produit.quantite;
         await produitEnStock.save();
       } else {
         const newProduitEnStock = await ProduitEnStock.create({
-          produit: produit.produit._id,
+          produit: produit._id,
           quantite: produit.quantite,
           prixVente: produit.prixVente,
           prixAchat: produit.prixAchat,
