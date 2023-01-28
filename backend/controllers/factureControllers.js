@@ -55,8 +55,6 @@ exports.getFacture = async (req, res) => {
         },
       })
 
-      console.log(facture.listeProduits.produit);
-
 
     res.status(200).json({
       status: "success",
