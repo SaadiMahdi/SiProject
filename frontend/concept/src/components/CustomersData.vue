@@ -1,18 +1,26 @@
 <template>
   <v-data-table
+    v-model="selectedRows"
     :headers="headers"
     :items="customers"
     sort-by="customers"
+    show-select
+    item-key="_id"
   >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-              New Customer
+            <v-btn
+              v-if="selectedRows.length != 0"
+              color="secondary"
+              dark
+              class="mb-2"
+              @click="deleteItem(selectedRows)"
+            >
+              Delete
             </v-btn>
-          </template>
+            <v-btn color="primary" dark class="mb-2" @click="InsertItem()"> New Customer </v-btn>
+        <v-dialog v-model="dialog" max-width="500px">
           <v-card>
             <v-card-title>
               <span class="">Add Customer</span>
@@ -72,27 +80,39 @@
               <span class="">Modify customer</span>
             </v-card-title>
             <form action="" method="post">
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-text-field v-model="customer.name" label="customer" outlined></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field v-model="customer.address" label="Adress" outlined></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field v-model="customer.phone" label="Phone" outlined></v-text-field>
-                </v-row>
-                <v-row>
-                  <v-text-field
-                    v-model="customer.credit"
-                    label="credit"
-                    outlined
-                  ></v-text-field>
-                </v-row>
-              </v-container>
-            </v-card-text>
-          </form>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-text-field
+                      v-model="customer.name"
+                      label="customer"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                      v-model="customer.address"
+                      label="Adress"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                      v-model="customer.phone"
+                      label="Phone"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field
+                      v-model="customer.credit"
+                      label="credit"
+                      outlined
+                    ></v-text-field>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+            </form>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" text @click="closeEdit"> Cancel </v-btn>
@@ -108,7 +128,9 @@
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm(selectedId)">OK</v-btn>
+              <v-btn color="primary " @click="deleteItemConfirm(selectedId); deleteMany(selectedRows);"
+                >OK</v-btn
+              >
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -116,7 +138,9 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)">
+        mdi-pencil
+      </v-icon>
       <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
@@ -149,6 +173,7 @@ export default {
       { text: "Actions", value: "actions", sortable: false },
     ],
     customers: [],
+    selectedRows:[],
     editedIndex: -1,
     customer: {
       name: "",
@@ -179,13 +204,14 @@ export default {
 
   methods: {
     getCustomer() {
-      axios.get('http://localhost:3000/api/v1/client')
+      axios
+        .get("http://localhost:3000/api/v1/client")
         .then((response) => {
           this.customers = response.data.data.client;
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     InsertItem(item) {
@@ -210,7 +236,18 @@ export default {
     },
 
     deleteItemConfirm(id) {
-      axios.delete('http://localhost:3000/api/v1/client/' + id);
+      if (this.selectedRows.length == 0) {
+      axios.delete("http://localhost:3000/api/v1/client/" + id);
+      this.closeDelete();
+      this.getCustomer();
+      this.$forceUpdate();
+      }
+    },
+
+    deleteMany(selectedRows) {
+      const ids= selectedRows.map((row) => row._id);
+      console.log(ids)
+      axios.post("http://localhost:3000/api/v1/client/deleteMany", ids);
       this.closeDelete();
       this.getCustomer();
       this.$forceUpdate();
@@ -228,13 +265,14 @@ export default {
     },
 
     save() {
-      axios.post('http://localhost:3000/api/v1/client', this.customer)
+      axios
+        .post("http://localhost:3000/api/v1/client", this.customer)
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
         })
-        .catch(error => {
-          console.log(error)
-        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
       this.getCustomer();
       this.$forceUpdate();

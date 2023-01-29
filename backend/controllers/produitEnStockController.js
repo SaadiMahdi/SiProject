@@ -99,7 +99,8 @@ exports.deleteProduitEnStock = async (req, res) => {
 
 exports.deleteProduitsEnStock = async (req, res) => {
   try {
-    await ProduitEnStock.deleteMany({ _id: { $in: req.body.ids } });
+    console.log(req.body)
+    await ProduitEnStock.deleteMany({ _id: { $in: req.body } });
 
     res.status(204).json({
       status: 'success',

@@ -13,4 +13,8 @@ router
   .patch(categorieController.updateCategorie)
   .delete(categorieController.deleteCategorie);
 
+router
+  .route('/deleteMany')
+  .post(categorieController.deleteCategories);
+
 module.exports = router;

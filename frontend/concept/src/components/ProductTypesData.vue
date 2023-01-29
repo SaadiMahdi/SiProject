@@ -1,18 +1,28 @@
 <template>
   <div>
     <v-data-table
+      v-model="selectedRows"
       :headers="headers"
       :items="this.categories"
       sort-by="products"
+      show-select
+      item-key="_id"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
-          <template>
-            <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
-              New Category
-            </v-btn>
-          </template>
+          <v-btn
+            v-if="selectedRows.length != 0"
+            color="secondary"
+            dark
+            class="mb-2"
+            @click="deleteItem(selectedRows)"
+          >
+            Delete
+          </v-btn>
+          <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
+            New Category
+          </v-btn>
           <v-dialog v-model="dialog" max-width="500px">
             <v-card>
               <v-card-title>
@@ -85,7 +95,12 @@
               <v-card-actions class="rounded-xl">
                 <v-spacer></v-spacer>
                 <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                <v-btn
+                  color="primary "
+                  @click="
+                    deleteItemConfirm(selectedId);
+                    deleteMany(selectedRows);
+                  "
                   >OK</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -95,15 +110,17 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+        <v-icon small class="mr-2" @click="editItem(item._id)">
+          mdi-pencil
+        </v-icon>
         <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
       </template>
       <template v-slot:no-data>
         <h3 class="secondary--text">No Products Yet?</h3>
         <p>Add products to your store and start selling to see products here</p>
         <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
-              New Category
-            </v-btn>
+          New Category
+        </v-btn>
       </template>
     </v-data-table>
   </div>
@@ -131,6 +148,7 @@ export default {
     ],
     categories: [],
     selectedId: null,
+    selectedRows: [],
     category: {
       designation: "",
       date: 0,
@@ -182,20 +200,33 @@ export default {
       this.selectedId = id;
     },
     edit(id) {
-      axios.patch("http://localhost:3000/api/v1/categorie/" + id, this.category);
+      axios.patch(
+        "http://localhost:3000/api/v1/categorie/" + id,
+        this.category
+      );
       this.closeEdit();
       this.getCategory();
       this.$forceUpdate();
     },
 
     deleteItemConfirm(id) {
-      console.log(id);
-      axios.delete("http://localhost:3000/api/v1/categorie/" + id);
+      if (this.selectedRows.length == 0) {
+        console.log(id);
+        axios.delete("http://localhost:3000/api/v1/categorie/" + id);
+        this.closeDelete();
+        this.getCategory();
+        this.$forceUpdate();
+      }
+    },
+
+    deleteMany(selectedRows) {
+      const ids = selectedRows.map((row) => row._id);
+      console.log(ids);
+      axios.post("http://localhost:3000/api/v1/categorie/deleteMany", ids);
       this.closeDelete();
       this.getCategory();
       this.$forceUpdate();
     },
-
     close() {
       this.dialog = false;
     },

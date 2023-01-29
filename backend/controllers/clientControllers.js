@@ -95,3 +95,19 @@ exports.deleteClient = async (req, res) => {
   }
 };
 
+exports.deleteClients = async (req, res) => {
+  try {
+
+    await Client.deleteMany({ _id: { $in: req.body } });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+}

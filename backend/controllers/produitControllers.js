@@ -120,9 +120,8 @@ exports.deleteProduit = async (req, res) => {
 
 exports.deleteProduits = async (req, res) => {
   try {
-    const productIds = req.body.productIds.map(id => mongoose.Types.ObjectId(id));
 
-    await Produit.deleteMany({ _id: { $in: productIds } });
+    await Produit.deleteMany({ _id: { $in: req.body } });
 
     res.status(204).json({
       status: 'success',
