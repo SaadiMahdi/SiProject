@@ -1,14 +1,26 @@
 <template>
   <div>
     <v-data-table
+      v-model="selectedRows"
       :headers="headers"
       :items="this.orders"
       sort-by="products"
+      show-select
+      item-key="_id"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
           <template>
+            <v-btn
+              v-if="selectedRows.length != 0"
+              color="secondary"
+              dark
+              class="mb-2"
+              @click="deleteItem(selectedRows)"
+            >
+              Delete
+            </v-btn>
             <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
               New Order
             </v-btn>
@@ -151,10 +163,7 @@
                             outlined
                           ></v-text-field>
                         </template>
-                        <v-date-picker
-                          v-model="order.date"
-                          scrollable
-                        >
+                        <v-date-picker v-model="order.date" scrollable>
                           <v-spacer></v-spacer>
                           <v-btn text color="primary" @click="modal = false">
                             Cancel
@@ -223,7 +232,12 @@
               <v-card-actions class="rounded-xl">
                 <v-spacer></v-spacer>
                 <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                <v-btn
+                  color="primary "
+                  @click="
+                    deleteItemConfirm(selectedId);
+                    deleteMany(selectedRows);
+                  "
                   >OK</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -271,6 +285,7 @@ export default {
     orders: [],
     vendors: [],
     prod: [],
+    selectedRows: [],
     selectedId: null,
     order: {
       listeProduits: [],
@@ -353,8 +368,19 @@ export default {
       this.selectedId = id;
     },
     deleteItemConfirm(id) {
+      if (this.selectedRows.length == 0) {
       console.log(id);
       axios.delete("http://localhost:3000/api/v1/bonCommande/" + id);
+      this.closeDelete();
+      this.getOrder();
+      this.$forceUpdate();
+      }
+    },
+
+      deleteMany(selectedRows) {
+      const ids= selectedRows.map((row) => row._id);
+      console.log(ids)
+      axios.post("http://localhost:3000/api/v1/bonCommande/deleteMany", ids);
       this.closeDelete();
       this.getOrder();
       this.$forceUpdate();
@@ -377,7 +403,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           this.getOrder();
-          this.$refs.form.reset()
+          this.$refs.form.reset();
           this.$forceUpdate();
         })
         .catch((error) => {

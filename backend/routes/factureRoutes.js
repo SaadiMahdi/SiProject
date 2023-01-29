@@ -20,4 +20,9 @@ router
   .route('/factureTotal/:id')
   .get(factureController.calculateTotal);
 
+
+router
+  .route('/deleteMany')
+  .post(factureController.deleteFactures);
+
 module.exports = router;

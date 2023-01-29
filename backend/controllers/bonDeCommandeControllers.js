@@ -97,3 +97,21 @@ exports.deleteBon = async (req, res) => {
     });
   }
 };
+
+
+exports.deleteBons = async (req, res) => {
+  try {
+    console.log(req.body)
+    await bonDeCommande.deleteMany({ _id: { $in: req.body } });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+}

@@ -13,4 +13,8 @@ router
   .patch(bonDeCommandeController.updateBon)
   .delete(bonDeCommandeController.deleteBon);
 
+router
+  .route('/deleteMany')
+  .post(bonDeCommandeController.deleteBons);
+
 module.exports = router;
