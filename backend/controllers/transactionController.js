@@ -1,14 +1,12 @@
 const { findById } = require("../models/fournisseurModel");
 const transaction = require("./../models/transactionModel");
 const ProduitEnStock = require("./../models/produitEnStockModel")();
-const Client = require("./../models/clientModel")();
 
 exports.getAllTransactions = async (req, res) => {
   try {
     const tr = await transaction
-      .find({})
-      .populate("client", "_id")
-      .populate("listeProduits.produit", "_id");
+      .find({}).populate("client")
+ 
 
     res.status(200).json({
       status: "success",
@@ -103,17 +101,17 @@ exports.createTransaction = async (req, res) => {
   try {
     const newTransaction = await transaction.create(req.body);
       
-    const listeProduits = req.body.listeProduits;
-    listeProduits.forEach(async (produit) => {
-      const produitEnStock = await ProduitEnStock.findById(produit.produit);
-      if (produitEnStock.quantite >= produit.quantite) {
-        produitEnStock.quantite -= produit.quantite;
-        await produitEnStock.save();
-      }
-      else{
-        throw new Error ("Quantite insuffisante");
-      }
-    });
+    // const listeProduits = req.body.listeProduits;
+    // listeProduits.forEach(async (produit) => {
+    //   const produitEnStock = await ProduitEnStock.findById(produit.produit);
+    //   if (produitEnStock.quantite >= produit.quantite) {
+    //     produitEnStock.quantite -= produit.quantite;
+    //     await produitEnStock.save();
+    //   }
+    //   else{
+    //     throw new Error ("Quantite insuffisante");
+    //   }
+    // });
 
     res.status(201).json({
       status: "success",

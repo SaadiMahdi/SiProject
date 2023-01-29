@@ -21,7 +21,7 @@ const transactionSchema = new mongoose.Schema({
     ],
     client: {
         type: ObjectId,
-        ref: "Client",
+        ref: "client",
         required: true,
     },
 })
