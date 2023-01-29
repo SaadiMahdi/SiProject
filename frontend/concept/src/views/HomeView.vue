@@ -13,13 +13,13 @@
           <InfoCard :icon="costumerIcon" :elements="costumersInfo"></InfoCard>
         </v-card>
         <v-card class="stats1 rounded-lg" flat>
-          <h2>Stats</h2>
+          <canvas id="myChart"></canvas>
         </v-card>
         <v-card class="endcard rounded-lg" flat>
           <InfoCard :icon="baughtIcon" :elements="boughtInfo"></InfoCard>
         </v-card>
         <v-card class="stats2 rounded-lg" flat>
-          <h2>Stats</h2>
+          <canvas id="myChart2"></canvas>
         </v-card>
         <v-card class="endcard rounded-lg" flat>
           <InfoCard :icon="vendorIcon" :elements="vendorsInfo"></InfoCard>
@@ -28,11 +28,16 @@
     </div>
   </div>
 </template>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 import AppSlideBar from "../components/AppSlideBar";
 import AppNavBar from "../components/AppNavBar";
 import InfoCard from "../components/InfoCard.vue";
+import { Bar } from 'vue-chartjs';
+import Chart from 'chart.js/auto';
+import { Line } from 'vue-chartjs';
+
 
 export default {
   components: {
@@ -89,6 +94,54 @@ export default {
       vendorIcon: "mdi-account-outline",
     }
   },
+  mounted () {
+    console.log('hhhhhh');
+
+    const ctx = document.getElementById('myChart');
+
+  const myChart =  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  },
+  mounted () {
+
+    const ctx2 = document.getElementById('myChart2');
+
+  const myChart2 =  new Chart(ctx2, {
+    type: 'line',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  },
+
 };
 </script>
 

@@ -284,7 +284,6 @@
                             <p>ProductID: {{ produit._id }}</p>
                           </v-container>
                         </v-col>
-
                         <v-col>
                           <v-container>
                             <p>Quantity: {{ produit.quantite }}</p>
@@ -292,13 +291,12 @@
                         </v-col>
                         <v-col>
                           <v-container>
-                            <p>Price: {{ produit.prixAchat }}</p>
+                            <p>Price: {{ produit.prixVente }}</p>
                           </v-container>
                         </v-col>
                       </v-row>
                     </v-container>
                     <hr />
-
                     <v-container>
                       <v-col>
                         <p class="total">
@@ -306,7 +304,7 @@
                           {{
                             sale.listeProduits.reduce(
                               (total, produit) =>
-                                total + produit.quantite * produit.prixAchat,
+                                total + produit.quantite * produit.prixVente,
                               0
                             )
                           }}
