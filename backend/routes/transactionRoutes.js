@@ -10,8 +10,14 @@ router
 router
   .route('/:id')
   .get(transactionController.getTransaction)
-  .get(transactionController.getTransactionsByClient)
   .patch(transactionController.updateTransaction)
   .delete(transactionController.deleteTransaction);
+  
+  // .get(transactionController.getTransactionsByClient)
+
+router
+  .route('/deleteMany')
+  .post(transactionController.deleteTransactions);
+
 
 module.exports = router;

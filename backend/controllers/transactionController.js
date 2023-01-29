@@ -27,8 +27,8 @@ exports.getTransaction = async (req, res) => {
   try {
     const tr = await transaction
       .findById(req.params.id)
-      .populate("client", "_id")
-      .populate("listeProduits.produit", "_id");
+      .populate("client", "_id name phone")
+      .populate("listeProduits.produit", "_id designation");
 
     res.status(200).json({
       status: "success",
@@ -44,27 +44,27 @@ exports.getTransaction = async (req, res) => {
   }
 };
 
-exports.getTransactionsByClient = async (req, res) => {
-  try {
-    const tr = await transaction
-      .find({ client: req.params.id })
-      .populate("client", "_id")
-      .populate("listeProduits.produit", "_id");
+// exports.getTransactionsByClient = async (req, res) => {
+//   try {
+//     const tr = await transaction
+//       .find({ client: req.params.id })
+//       .populate("client", "_id")
+//       .populate("listeProduits.produit", "_id");
 
-    res.status(200).json({
-      status: "success",
-      results: tr.length,
-      data: {
-        tr,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: "fail",
-      message: err,
-    });
-  }
-};
+//     res.status(200).json({
+//       status: "success",
+//       results: tr.length,
+//       data: {
+//         tr,
+//       },
+//     });
+//   } catch (err) {
+//     res.status(404).json({
+//       status: "fail",
+//       message: err,
+//     });
+//   }
+// };
 
 
 
@@ -98,7 +98,7 @@ exports.getTransactionsByClient = async (req, res) => {
 // };
 
 exports.createTransaction = async (req, res) => {
-  try {
+  try { 
     const newTransaction = await transaction.create(req.body);
       
     // const listeProduits = req.body.listeProduits;
@@ -112,6 +112,7 @@ exports.createTransaction = async (req, res) => {
     //     throw new Error ("Quantite insuffisante");
     //   }
     // });
+
 
     res.status(201).json({
       status: "success",
@@ -164,3 +165,21 @@ exports.deleteTransaction = async (req, res) => {
     });
   }
 };
+
+
+exports.deleteTransactions = async (req, res) => {
+  try {
+    console.log(req.body)
+    await transaction.deleteMany({ _id: { $in: req.body } });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+}
