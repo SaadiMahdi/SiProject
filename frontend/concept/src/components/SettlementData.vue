@@ -16,21 +16,50 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="settlment.name" label="Dessert name" outlined></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="settlment.calories" label="Calories" outlined></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="settlment.fat" label="Fat (g)" outlined></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="settlment.carbs" label="Carbs (g)" outlined></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="settlment.protein" label="Protein (g)" outlined></v-text-field>
-                  </v-col>
+                  
+                    <v-dialog
+                        ref="dialog"
+                        v-model="modal"
+                        persistent
+                        width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="settlment.date"
+                            format="dd/MM/yyyy"
+                            label="Insert Date"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            outlined
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                          v-model="settlment.date"
+                          scrollable
+                          format="dd/MM/yyyy"
+                        >
+                          <v-spacer></v-spacer>
+                          <v-btn text color="primary" @click="modal = false">
+                            Cancel
+                          </v-btn>
+                          <v-btn
+                            text
+                            color="primary"
+                            @click="$refs.dialog.save(settlment.date)"
+                          >
+                            OK
+                          </v-btn>
+                        </v-date-picker>
+                      </v-dialog>
+                    <v-select
+                      v-model="settlment.facture"
+                      label="Facture"
+                      :items="bills"
+                      item-text="_id"
+                      item-value="facture.id"
+                    ></v-select>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -48,7 +77,7 @@
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="primary " @click="deleteItemConfirm(selectedId)">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -56,8 +85,8 @@
       </v-toolbar>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item._id)"> mdi-pencil </v-icon>
+      <v-icon small @click="deleteItem(item._id)"> mdi-delete </v-icon>
     </template>
     <template v-slot:no-data>
       <h3 class="secondary--text">No Products Yet?</h3>
@@ -75,6 +104,7 @@ import axios from "axios";
 export default {
   name: "SettlementData",
   data: () => ({
+    modal: false,
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -82,7 +112,7 @@ export default {
         text: "Vendor",
         align: "start",
         sortable: false,
-        value: "facture.fournisseur",
+        value: "facture.fournisseur.name",
       },
       { text: "Added The", value: "date" },
       { text: "Settlment ID", value: "_id" },
@@ -105,16 +135,6 @@ export default {
     },
   }),
 
-  computed: {
-    //calcul du montant total de la facture
-    total() {
-      return this.settlments.reduce((total, settlment) => {
-        return total + settlment.facture.reduce((subTotal, bill) => {
-          return subTotal + bill.prixAchat;
-        }, 0);
-      }, 0);
-    },  
-  },
 
   watch: {
     dialog(val) {
@@ -125,11 +145,18 @@ export default {
     },
   },
 
+  computed: {
+    caluclTotal() {
+      return this.bills.reduce((acc, bill) => {
+        return acc + bill.prixAchat * bill.quantite;
+      }, 0);
+    },
+    },
+
   mounted() {
     this.getSettlment();
     this.getBill();
     this.getVendor();
-    console.log(this.total)
   },
 
   methods: {
@@ -164,46 +191,58 @@ export default {
         })
     },
 
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.settlment = Object.assign({}, item);
+    InsertItem(item) {
       this.dialog = true;
     },
-
-    deleteItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.settlment = Object.assign({}, item);
-      this.dialogDelete = true;
+    editItem(id) {
+      this.dialogEdit = true;
+      this.selectedId = id;
+    },
+    edit(id) {
+      axios.patch("http://localhost:3000/api/v1/reglement/" + id, this.settlment);
+      this.closeEdit();
+      this.getSettlment();
+      this.$forceUpdate();
     },
 
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
+    deleteItem(id) {
+      this.dialogDelete = true;
+      this.selectedId = id;
+    },
+
+    deleteItemConfirm(id) {
+      axios.delete("http://localhost:3000/api/v1/reglement/" + id);
       this.closeDelete();
+      this.getSettlment();
+      this.$forceUpdate();
     },
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.settlment = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     closeDelete() {
       this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.settlment = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+    },
+    closeEdit() {
+      this.dialogEdit = false;
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.settlment);
-      } else {
-        this.desserts.push(this.settlment);
-      }
+      console.log(this.settlment)
+      axios
+        .post("http://localhost:3000/api/v1/reglement/", this.settlment)
+        .then((response) => {
+          console.log(response.data);
+          this.getSettlment();
+          this.$forceUpdate();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       this.close();
+      this.getSettlment();
+      this.$forceUpdate();
     },
   },
 };
