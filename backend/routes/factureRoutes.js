@@ -6,6 +6,8 @@ router
   .route('/')
   .get(factureController.getAllFactures)
   .post(factureController.createFacture);
+  
+  router.get('/pdf/:id', factureController.generateFacturePdf);
 
 router
   .route('/:id')

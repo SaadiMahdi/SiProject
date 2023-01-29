@@ -1,6 +1,38 @@
 const Facture = require("./../models/factureModel");
 const ProduitEnStock = require("./../models/produitEnStockModel")();
+const PDFDocument = require('pdfkit');
 
+
+exports.generateFacturePdf = async (req, res) => {
+  const facture = await Facture.findById(req.params.id);
+  //create a new pdf document
+  const doc = new PDFDocument();
+  
+  //set the response headers
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename="facture.pdf"');
+  
+  //pipe the pdf document to the response
+  doc.pipe(res);
+  
+  //add content to the pdf document
+  doc.font('Helvetica-Bold').text('Facture', {
+    align: 'center'
+  });
+  doc.moveDown();
+  doc.font('Helvetica').text('Fournisseur: ' + fournisseur.name);
+  doc.moveDown();
+  doc.text('Liste des produits:');
+  doc.moveDown();
+  facture.listeProduits.forEach((produit) => {
+    doc.text(produit.designation + ' - Quantite: ' + produit.quantite + ' - Prix: ' + produit.prixAchat);
+  });
+  doc.moveDown();
+  doc.text('Total: ' + facture.listeProduits.reduce((total, produit) => total + produit.quantite * produit.prixAchat, 0));
+  
+  //end the pdf document
+  doc.end();
+}
 
 exports.calculateTotal = async (req, res) => {
   try {
@@ -54,8 +86,6 @@ exports.getFacture = async (req, res) => {
           select: "_id designation",
         },
       })
-
-      console.log(facture.listeProduits.produit);
 
 
     res.status(200).json({
