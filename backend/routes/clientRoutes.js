@@ -13,4 +13,8 @@ router
   .patch(clientController.updateClient)
   .delete(clientController.deleteClient);
 
+router
+  .route('/deleteMany')
+  .post(clientController.deleteClients);
+
 module.exports = router;

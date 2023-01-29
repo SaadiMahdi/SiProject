@@ -13,4 +13,9 @@ router
   .patch(fournisseurController.updateFournisseur)
   .delete(fournisseurController.deleteFournisseur);
 
+router
+  .route('/deleteMany')
+  .post(fournisseurController.deleteFournisseurs);
+
+
 module.exports = router;

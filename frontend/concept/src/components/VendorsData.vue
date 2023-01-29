@@ -1,21 +1,30 @@
 <template>
-  <v-data-table :headers="headers" :items="this.vendors" sort-by="vendors" >
+  <v-data-table
+    v-model="selectedRows"
+    :headers="headers"
+    show-select
+    item-key="_id"
+    :items="this.vendors"
+    sort-by="vendors"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click="InsertItem()"> Add Vendor </v-btn>
+        <template>
+          <v-btn
+            v-if="selectedRows.length != 0"
+            color="secondary"
+            dark
+            class="mb-2"
+            @click="deleteItem(selectedRows)"
+          >
+            Delete
+          </v-btn>
+          <v-btn color="primary" class="mb-2" @click="InsertItem()">
+            Add Vendor
+          </v-btn>
+        </template>
         <v-dialog v-model="dialog" max-width="500px">
-          <template>
-            <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>
-            <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-              @click="InsertItem()"
-            >
-              New Vendor
-            </v-btn>
-          </template>
           <v-card>
             <v-card-title>
               <span class="">Add Vendor</span>
@@ -115,7 +124,12 @@
             <v-card-actions class="rounded-xl">
               <v-spacer></v-spacer>
               <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+              <v-btn
+                color="primary "
+                @click="
+                  deleteItemConfirm(selectedId);
+                  deleteMany(selectedRows);
+                "
                 >OK</v-btn
               >
               <v-spacer></v-spacer>
@@ -158,7 +172,7 @@ export default {
       { text: "Orders", value: "orders" },
       { text: "Action", value: "actions", sortable: false },
     ],
-    selectedRows:[],
+    selectedRows: [],
     vendors: [],
     selectedId: null,
     vendor: {
@@ -195,8 +209,8 @@ export default {
         .then((response) => {
           this.vendors = response.data.data.fournisseurs;
         })
-        .catch(error => {
-          console.log(error)
+        .catch((error) => {
+          console.log(error);
         })
         .catch((error) => {
           console.log(error);
@@ -228,7 +242,17 @@ export default {
     },
 
     deleteItemConfirm(id) {
-      axios.delete("http://localhost:3000/api/v1/fournisseur/" + id);
+      if (this.selectedRows.length == 0) {
+        axios.delete("http://localhost:3000/api/v1/fournisseur/" + id);
+        this.closeDelete();
+        this.getVendor();
+        this.$forceUpdate();
+      }
+    },
+    deleteMany(selectedRows) {
+      const ids = selectedRows.map((row) => row._id);
+      console.log(ids);
+      axios.post("http://localhost:3000/api/v1/fournisseur/deleteMany", ids);
       this.closeDelete();
       this.getVendor();
       this.$forceUpdate();

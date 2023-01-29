@@ -1,18 +1,26 @@
 <template>
   <div>
     <v-data-table
-    v-model="selectedRows"
+      v-model="selectedRows"
       :headers="headers"
       :items="this.prod"
       sort-by="products"
       show-select
-      item-key = "_id"
+      item-key="_id"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-spacer></v-spacer>
           <template>
-            <v-btn v-if="selectedRows.length!=0" color="secondary" dark class="mb-2" @click="deleteItem(selectedRows)"> Delete </v-btn>
+            <v-btn
+              v-if="selectedRows.length != 0"
+              color="secondary"
+              dark
+              class="mb-2"
+              @click="deleteItem(selectedRows)"
+            >
+              Delete
+            </v-btn>
             <v-btn color="primary" dark class="mb-2" @click="InsertItem()">
               New Product
             </v-btn>
@@ -111,7 +119,12 @@
               <v-card-actions class="rounded-xl">
                 <v-spacer></v-spacer>
                 <v-btn color="primary " text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="primary " @click="deleteItemConfirm(selectedId)"
+                <v-btn
+                  color="primary "
+                  @click="
+                    deleteItemConfirm(selectedId);
+                    deleteMany(selectedRows);
+                  "
                   >OK</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -155,7 +168,7 @@ export default {
       { text: "Tracking ID", value: "_id" },
       { text: "Actions", value: "actions", sortable: false },
     ],
-    selectedRows:[],
+    selectedRows: [],
     prod: [],
     categories: [],
     selectedId: null,
@@ -192,7 +205,7 @@ export default {
         .get("http://localhost:3000/api/v1/produit")
         .then((response) => {
           this.prod = response.data.data.produits;
-          console.log(response)
+          console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -228,13 +241,22 @@ export default {
       this.selectedId = id;
     },
     deleteItemConfirm(id) {
+      if (this.selectedRows.length == 0) {
       console.log(id);
       axios.delete("http://localhost:3000/api/v1/produit/" + id);
       this.closeDelete();
       this.getProduct();
       this.$forceUpdate();
+      }
     },
-
+    deleteMany(selectedRows) {
+      const ids= selectedRows.map((row) => row._id);
+      console.log(ids)
+      axios.post("http://localhost:3000/api/v1/produit/deleteMany", ids);
+      this.closeDelete();
+      this.getProduct();
+      this.$forceUpdate();
+    },
     close() {
       this.dialog = false;
     },

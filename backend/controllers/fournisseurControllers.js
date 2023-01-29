@@ -94,3 +94,20 @@ exports.deleteFournisseur = async (req, res) => {
   }
 };
 
+exports.deleteFournisseurs = async (req, res) => {
+  try {
+
+    await Fournisseur.deleteMany({ _id: { $in: req.body } });
+
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+}
+
