@@ -5,7 +5,12 @@ exports.getAllReglement = async (req, res) => {
     const reglements = await Reglement
       .find({})
       .populate("facture")
-      .populate("facture.fournisseur")
+      .populate({
+        path: "facture",
+        populate: {
+          path: "fournisseur"
+        }
+      })
     res.status(200).json({
       status: "success",
       results: reglements.length,
@@ -82,7 +87,7 @@ exports.updateReglement = async (req, res) => {
 
 exports.deleteReglement = async (req, res) => {
   try {
-    await Facture.findByIdAndDelete(req.params.id);
+    await Reglement.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: "success",

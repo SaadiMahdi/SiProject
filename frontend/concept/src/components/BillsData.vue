@@ -408,7 +408,7 @@ export default {
     edit(id) {
       axios.patch("http://localhost:3000/api/v1/facture/" + id, this.bill);
       this.closeEdit();
-      this.getProduct();
+      this.getBill();
       this.$forceUpdate();
     },
 

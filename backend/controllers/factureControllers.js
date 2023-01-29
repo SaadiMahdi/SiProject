@@ -4,7 +4,8 @@ const PDFDocument = require('pdfkit');
 
 
 exports.generateFacturePdf = async (req, res) => {
-  const facture = await Facture.findById(req.params.id);
+  const facture = await Facture.findById(req.params.id)
+    .populate('fournisseur')
   //create a new pdf document
   const doc = new PDFDocument();
   
@@ -20,7 +21,9 @@ exports.generateFacturePdf = async (req, res) => {
     align: 'center'
   });
   doc.moveDown();
-  doc.font('Helvetica').text('Fournisseur: ' + fournisseur.name);
+  doc.font('Helvetica').text('Numero: ' + facture._id);
+  doc.font('Helvetica').text('Date: ' + facture.date);
+  doc.font('Helvetica').text('Fournisseur: ' + facture.fournisseur.name);
   doc.moveDown();
   doc.text('Liste des produits:');
   doc.moveDown();

@@ -5,7 +5,6 @@ const { ObjectId } = mongoose.Schema.Types;
 const reglementSchema = new mongoose.Schema({
     date:{
         type: Date,
-        default: Date.now()
     },
     facture:{
         type: ObjectId,
