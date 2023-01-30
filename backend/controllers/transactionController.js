@@ -44,27 +44,27 @@ exports.getTransaction = async (req, res) => {
   }
 };
 
-// exports.getTransactionsByClient = async (req, res) => {
-//   try {
-//     const tr = await transaction
-//       .find({ client: req.params.id })
-//       .populate("client", "_id")
-//       .populate("listeProduits.produit", "_id");
+exports.getTransactionsByClient = async (req, res) => {
+  try {
+    const tr = await transaction
+      .find({ client: req.params.id })
+      .populate("client", "_id")
+      .populate("listeProduits.produit", "_id");
 
-//     res.status(200).json({
-//       status: "success",
-//       results: tr.length,
-//       data: {
-//         tr,
-//       },
-//     });
-//   } catch (err) {
-//     res.status(404).json({
-//       status: "fail",
-//       message: err,
-//     });
-//   }
-// };
+    res.status(200).json({
+      status: "success",
+      results: tr.length,
+      data: {
+        tr,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
 
 
 
@@ -101,17 +101,17 @@ exports.createTransaction = async (req, res) => {
   try { 
     const newTransaction = await transaction.create(req.body);
       
-    // const listeProduits = req.body.listeProduits;
-    // listeProduits.forEach(async (produit) => {
-    //   const produitEnStock = await ProduitEnStock.findById(produit.produit);
-    //   if (produitEnStock.quantite >= produit.quantite) {
-    //     produitEnStock.quantite -= produit.quantite;
-    //     await produitEnStock.save();
-    //   }
-    //   else{
-    //     throw new Error ("Quantite insuffisante");
-    //   }
-    // });
+    const listeProduits = req.body.listeProduits;
+    listeProduits.forEach(async (produit) => {
+      const produitEnStock = await ProduitEnStock.findById(produit.produit);
+      if (produitEnStock.quantite >= produit.quantite) {
+        produitEnStock.quantite -= produit.quantite;
+        await produitEnStock.save();
+      }
+      else{
+        throw new Error ("Quantite insuffisante");
+      }
+    });
 
 
     res.status(201).json({
